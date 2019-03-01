@@ -1,23 +1,24 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Posts on My New Hugo Site</title>
-    <link>http://example.org/posts/</link>
-    <description>Recent content in Posts on My New Hugo Site</description>
+    <title>Posts on Miki&#39;s Blog</title>
+    <link>https://mikihau.github.io/posts/</link>
+    <description>Recent content in Posts on Miki&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 24 Jan 2019 17:14:37 -0800</lastBuildDate>
+    <lastBuildDate>Thu, 28 Feb 2019 16:35:04 -0800</lastBuildDate>
     
-	<atom:link href="http://example.org/posts/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://mikihau.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
-      <title>My First Post</title>
-      <link>http://example.org/posts/my-first-post/</link>
-      <pubDate>Thu, 24 Jan 2019 17:14:37 -0800</pubDate>
+      <title>Building Minesweeper with Go</title>
+      <link>https://mikihau.github.io/posts/building-minesweeper-with-go/</link>
+      <pubDate>Thu, 28 Feb 2019 16:35:04 -0800</pubDate>
       
-      <guid>http://example.org/posts/my-first-post/</guid>
-      <description></description>
+      <guid>https://mikihau.github.io/posts/building-minesweeper-with-go/</guid>
+      <description>After going through the Tour of Go I started my first toy program &amp;ndash; the game of Minesweeper (on github). To exercise what I have gotten down with Go I had a couple of things in mind about this program before I started:
+ It should be feature complete &amp;ndash; just all things you can do with the game. It should only depend on the standard library, so that I can focus on the basics.</description>
     </item>
     
   </channel>

@@ -3,12 +3,24 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>https://mikihau.github.io/posts/building-minesweeper-with-go/</loc>
+    <lastmod>2019-02-28T16:35:04-08:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://mikihau.github.io/categories/</loc>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>https://mikihau.github.io/</loc>
+    <lastmod>2019-02-28T16:35:04-08:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://mikihau.github.io/posts/</loc>
+    <lastmod>2019-02-28T16:35:04-08:00</lastmod>
     <priority>0</priority>
   </url>
   

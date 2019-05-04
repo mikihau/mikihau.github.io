@@ -6,10 +6,19 @@
     <description>Recent content on Miki&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 28 Feb 2019 16:35:04 -0800</lastBuildDate>
+    <lastBuildDate>Mon, 29 Apr 2019 22:15:09 -0800</lastBuildDate>
     
 	<atom:link href="https://mikihau.github.io/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Book Review: The Manager&#39;s Path</title>
+      <link>https://mikihau.github.io/posts/book-review-the-managers-path/</link>
+      <pubDate>Mon, 29 Apr 2019 22:15:09 -0800</pubDate>
+      
+      <guid>https://mikihau.github.io/posts/book-review-the-managers-path/</guid>
+      <description>My Expectations I decided to pick up this book for a couple of reasons. I&amp;rsquo;ve always been looking for a description of what a manager does, or should do, at tech companies. I&amp;rsquo;ve personally worked with a couple of managers so far, and each of them manage with distinctive styles, that I find myself agree/disagree with. I&amp;rsquo;d like to have a set of basic expectations for managers, and learn to understand things from the management&amp;rsquo;s side.</description>
+    </item>
     
     <item>
       <title>Building Minesweeper with Go</title>

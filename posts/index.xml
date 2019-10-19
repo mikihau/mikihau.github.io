@@ -6,10 +6,20 @@
     <description>Recent content in Posts on Miki&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 29 Apr 2019 22:15:09 -0800</lastBuildDate>
+    <lastBuildDate>Mon, 14 Oct 2019 20:32:09 -0700</lastBuildDate>
     
 	<atom:link href="https://mikihau.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Publishing My First Chrome Extension</title>
+      <link>https://mikihau.github.io/posts/publishing-my-first-chrome-extension/</link>
+      <pubDate>Mon, 14 Oct 2019 20:32:09 -0700</pubDate>
+      
+      <guid>https://mikihau.github.io/posts/publishing-my-first-chrome-extension/</guid>
+      <description>Just went through the excitement of publishing my first Chrome Extension, Douban Dousay filter (Chrome Web Store) (github). The code and feature itself is dead simple (~60 lines of javascript), but I just want to make a point for those who thinks making a Chrome Extension is a huge commitment or something. No, it&amp;rsquo;s actually pretty easy to get started.
+What I built was a filter for a social network site.</description>
+    </item>
     
     <item>
       <title>Book Review: The Manager&#39;s Path</title>

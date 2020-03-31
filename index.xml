@@ -6,10 +6,19 @@
     <description>Recent content on Miki&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 14 Oct 2019 20:32:09 -0700</lastBuildDate>
+    <lastBuildDate>Thu, 26 Mar 2020 06:32:04 -0800</lastBuildDate>
     
 	<atom:link href="https://mikihau.github.io/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Reflecting On My Interviewing Experience As a Mid Level(TM) Software Engineer</title>
+      <link>https://mikihau.github.io/interviewing-as-a-mid-level-engineer/</link>
+      <pubDate>Thu, 26 Mar 2020 06:32:04 -0800</pubDate>
+      
+      <guid>https://mikihau.github.io/interviewing-as-a-mid-level-engineer/</guid>
+      <description>Having recently spent a couple of months looking for my next career opportunity, I think it&amp;rsquo;d be great to write down my interviewing experience, and my personal comments to them. Throughout the process I&amp;rsquo;ve learned some things about companies, some things about tech careers, and some things about myself. I&amp;rsquo;m hoping this will shed some light on how we&amp;rsquo;re currently interviewing software engineers as an industry. The particular experience varies a lot by the individual, but I&amp;rsquo;m sure my experience covers at least some of the common cases.</description>
+    </item>
     
     <item>
       <title>Publishing My First Chrome Extension</title>

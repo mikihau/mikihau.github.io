@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
@@ -8,22 +8,27 @@
   </url>
   
   <url>
-    <loc>https://mikihau.github.io/interviewing-as-a-mid-level-engineer/</loc>
+    <loc>https://mikihau.github.io/post/</loc>
     <lastmod>2020-03-26T06:32:04-08:00</lastmod>
   </url>
   
   <url>
-    <loc>https://mikihau.github.io/publishing-my-first-chrome-extension/</loc>
+    <loc>https://mikihau.github.io/post/interviewing-as-a-mid-level-engineer/</loc>
+    <lastmod>2020-03-26T06:32:04-08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://mikihau.github.io/post/publishing-my-first-chrome-extension/</loc>
     <lastmod>2019-10-14T20:32:09-07:00</lastmod>
   </url>
   
   <url>
-    <loc>https://mikihau.github.io/book-review-the-managers-path/</loc>
+    <loc>https://mikihau.github.io/post/book-review-the-managers-path/</loc>
     <lastmod>2019-04-29T22:15:09-08:00</lastmod>
   </url>
   
   <url>
-    <loc>https://mikihau.github.io/building-minesweeper-with-go/</loc>
+    <loc>https://mikihau.github.io/post/building-minesweeper-with-go/</loc>
     <lastmod>2019-02-28T16:35:04-08:00</lastmod>
   </url>
   

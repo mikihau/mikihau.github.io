@@ -10,12 +10,12 @@
   <meta name="author" content="Miki Hau">
   <meta property="og:url" content="https://mikihau.github.io/post/self-hosting-akkoma/">
 
-  <title>Installing an Akkoma Instance for Self Hosting - Miki&#39;s Blog</title>
-  <meta property="og:title" content="Installing an Akkoma Instance for Self Hosting - Miki&#39;s Blog">
+  <title>Installing an Akkoma Instance - Miki&#39;s Blog</title>
+  <meta property="og:title" content="Installing an Akkoma Instance - Miki&#39;s Blog">
   <meta property="og:type" content="article">
   <meta name="description" content="">
 
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Code+Pro|Arvo:400,700">
+  <link rel="stylesheet" href="/css/fonts.css">
   <link rel="stylesheet" href="/css/highlight.css">
   <link rel="stylesheet" href="/css/journal.css">
   <link href="/index.xml" rel="alternate" type="application/rss+xml" title="Miki&#39;s Blog">
@@ -32,14 +32,14 @@
 
   <article class="post">
     <header class="post-header">
-      <h1 class="post-title">Installing an Akkoma Instance for Self Hosting</h1>
+      <h1 class="post-title">Installing an Akkoma Instance</h1>
       
       <time class="post-date" datetime="2023-01-15 17:29:56 PST">Jan 15 2023</time>
     </header>
 
     
     <div class="post-content markdown-body">
-      <p>I&rsquo;ve decided to self-host my own <a href="https://docs.akkoma.dev/stable/">Akkoma</a> (a hard fork of <a href="https://pleroma.social/">Pleroma</a>) instance, after actively and happily using Mastodon for 2.5 years. Inspired by <a href="https://the.teabag.ninja/posts/2022/11/installing-akkoma-on-your-host/">Snott&rsquo;s awesome and detailed writeup on Akkoma&rsquo;s OTP install</a>, I&rsquo;m also sharing my source installation notes along the way for all the folks on the internet, including my future self &ndash; since I did have a few surprises during the process.</p>
+      <p>I&rsquo;ve decided to self-host my own <a href="https://docs.akkoma.dev/stable/">Akkoma</a> (a hard fork of <a href="https://pleroma.social/">Pleroma</a>) instance, after actively and happily using Mastodon for 2.5 years. Inspired by <a href="https://the.teabag.ninja/posts/2022/11/installing-akkoma-on-your-host/">The Teabag Ninja&rsquo;s awesome and detailed writeup on Akkoma&rsquo;s OTP install</a>, I&rsquo;m also sharing my source installation notes along the way for all the folks on the internet, including my future self &ndash; since I did have a few surprises during the process.</p>
 <p>Unless otherwise noted, all commands below are tested on an ARM-based machine with Ubuntu 22.04, for an Akkoma install from source.</p>
 <h1 id="a-word-of-warning-hosting-the-instance-on-a-subdomain-with-a-different-account-identifier">A Word of Warning: Hosting the Instance on a (Sub)domain With a Different Account Identifier</h1>
 <p>I&rsquo;m putting this down first, because this burnt me so bad, that I had to tear down the entire installation, and re-install the instance under a different subdomain. Read this if you&rsquo;re like me, who:</p>
@@ -73,7 +73,7 @@
 </ul>
 <p>Also make sure to disable IPv6 and Auto Backups to avoid additional charges of $1/month.</p>
 <p>Vultr&rsquo;s Ubuntu instances are initially firewalled with <code>ufw</code> &ndash; the Ubuntu OS firewall. Initially only port 22 are allowed:</p>
-<pre><code>root@server:~# ufw status
+<pre><code class="language-console" data-lang="console">root@server:~# ufw status
 Status: active
 
 To                         Action      From
@@ -87,46 +87,46 @@ To                         Action      From
 <p>Like all DNS configurations, this takes a while to take effect. After a couple of hours, I&rsquo;m able to verify with <code>nslookup fedi.&lt;domain&gt;.com</code>, which returns my instance&rsquo;s IP.</p>
 <h1 id="installing-akkoma-from-source">Installing Akkoma (From Source)</h1>
 <p>On the OCI instance, I was following <a href="https://docs.akkoma.dev/stable/installation/otp_en/">the OTP guide</a> until the config generation step gave me:</p>
-<pre><code>$ su akkoma -s $SHELL -lc &quot;./bin/pleroma_ctl instance gen --output /etc/akkoma/config.exs --output-psql /tmp/setup_db.psql&quot;
+<pre><code class="language-console" data-lang="console">$ su akkoma -s $SHELL -lc &quot;./bin/pleroma_ctl instance gen --output /etc/akkoma/config.exs --output-psql /tmp/setup_db.psql&quot;
 /opt/akkoma/releases/3.5.0-0-gd9508474b/../../erts-13.1.2/bin/erl: 12: exec: /opt/akkoma/erts-13.1.2/bin/erlexec: Exec format error
 </code></pre><p>This is when I realized <a href="https://akkoma.dev/AkkomaGang/akkoma/issues/424">Akkoma doesn&rsquo;t support ARM builds yet at the time of writing</a> &ndash; but unfortunately I&rsquo;m on an ARM-based machine:</p>
-<pre><code>$ uname -m
+<pre><code class="language-console" data-lang="console">$ uname -m
 aarch64
 </code></pre><p>This means I&rsquo;ll have to install from source! All of the following commands are derived from the official Akkoma documentation, on installing from source, for <a href="https://docs.akkoma.dev/stable/installation/arch_linux_en/">Arch Linux</a>, and <a href="https://docs.akkoma.dev/stable/installation/alpine_linux_en">Alphine Linux</a>, adapted for Ubuntu.</p>
 <h4 id="installing-dependencies">Installing Dependencies</h4>
 <ol>
 <li>Switch to the root user:
-<pre><code>sudo su - root
+<pre><code class="language-console" data-lang="console">sudo su - root
 </code></pre></li>
 <li>Install the required deps:
-<pre><code>apt install postgresql elixir git cmake file build-essential erlang
+<pre><code class="language-console" data-lang="console">apt install postgresql elixir git cmake file build-essential erlang
 </code></pre></li>
 <li>Install the optional deps:
-<pre><code>apt install imagemagick ffmpeg libimage-exiftool-perl
+<pre><code class="language-console" data-lang="console">apt install imagemagick ffmpeg libimage-exiftool-perl
 </code></pre></li>
 <li>Start the Postgres service:
-<pre><code>systemctl start postgresql.service
+<pre><code class="language-console" data-lang="console">systemctl start postgresql.service
 </code></pre></li>
 </ol>
 <h4 id="the-akkoma-backend">The Akkoma Backend</h4>
 <ol>
 <li>Create the akkoma user if not already (<code>less /etc/passwd</code> to check):
-<pre><code>adduser --system --shell  /bin/false --home /opt/akkoma akkoma
+<pre><code class="language-console" data-lang="console">adduser --system --shell  /bin/false --home /opt/akkoma akkoma
 </code></pre><p>I took this from the OTP install guide, so that the home directory is <code>/opt/akkoma</code> instead.</p>
 </li>
 <li>Make the akkoma user the owner of <code>/opt/akkoma</code>, and clone the stable branch of akkoma code into it:
-<pre><code>mkdir -p /opt/akkoma
+<pre><code class="language-console" data-lang="console">mkdir -p /opt/akkoma
 chown -R akkoma /opt/akkoma
 su akkoma -s $SHELL -lc &quot;git clone https://akkoma.dev/AkkomaGang/akkoma.git -b stable /opt/akkoma&quot;
 </code></pre></li>
 <li>Change into the directory:
-<pre><code>cd /opt/akkoma
+<pre><code class="language-console" data-lang="console">cd /opt/akkoma
 </code></pre></li>
 <li>Install akkoma dependencies &ndash; say yes when you&rsquo;re asked to install <code>Hex</code>.
-<pre><code>su akkoma -s $SHELL -lc &quot;mix deps.get&quot;
+<pre><code class="language-console" data-lang="console">su akkoma -s $SHELL -lc &quot;mix deps.get&quot;
 </code></pre></li>
 <li>Generate configurations in <code>config/generated_config.exs</code>:
-<pre><code>su akkoma -s $SHELL -lc &quot;MIX_ENV=prod mix pleroma.instance gen&quot;
+<pre><code class="language-console" data-lang="console">su akkoma -s $SHELL -lc &quot;MIX_ENV=prod mix pleroma.instance gen&quot;
 </code></pre><ul>
 <li>As the offical doc explains, this step also compiles parts of akkoma, so it could take a bit while.</li>
 <li>Say yes when you&rsquo;re asked to install <code>rebar3</code>.</li>
@@ -134,16 +134,16 @@ su akkoma -s $SHELL -lc &quot;git clone https://akkoma.dev/AkkomaGang/akkoma.git
 </ul>
 </li>
 <li>Rename the config file to <code>/opt/akkoma/config/prod.secret.exs</code>:
-<pre><code>su akkoma -s $SHELL -lc &quot;mv config/{generated_config.exs,prod.secret.exs}&quot;
+<pre><code class="language-console" data-lang="console">su akkoma -s $SHELL -lc &quot;mv config/{generated_config.exs,prod.secret.exs}&quot;
 </code></pre></li>
 <li>Create the database:
-<pre><code>su postgres -s $SHELL -lc &quot;psql -f /opt/akkoma/config/setup_db.psql&quot;
+<pre><code class="language-console" data-lang="console">su postgres -s $SHELL -lc &quot;psql -f /opt/akkoma/config/setup_db.psql&quot;
 </code></pre></li>
 <li>Run the db migration &ndash; this compiles more files so again it takes a while.
-<pre><code>su akkoma -s $SHELL -lc &quot;MIX_ENV=prod mix ecto.migrate&quot;
+<pre><code class="language-console" data-lang="console">su akkoma -s $SHELL -lc &quot;MIX_ENV=prod mix ecto.migrate&quot;
 </code></pre></li>
 <li>Finally start the Akkoma backend:
-<pre><code>su akkoma -s $SHELL -lc &quot;MIX_ENV=prod mix phx.server&quot;
+<pre><code class="language-console" data-lang="console">su akkoma -s $SHELL -lc &quot;MIX_ENV=prod mix phx.server&quot;
 </code></pre><p>From another terminal (ssh&rsquo;ed into my server) I&rsquo;m able to <code>curl http://localhost:4000/api/v1/instance</code>, and get back some json. Sweet!</p>
 </li>
 </ol>
@@ -160,19 +160,19 @@ su akkoma -s $SHELL -lc &quot;git clone https://akkoma.dev/AkkomaGang/akkoma.git
 <ol>
 <li>
 <p>Stop nginx ot free up port 80:</p>
-<pre><code>systemctl stop nginx
+<pre><code class="language-console" data-lang="console">systemctl stop nginx
 </code></pre><p>And verify port 80 is clear with <code>netstat -ltpn</code>.</p>
 </li>
 <li>
 <p>Get a Let&rsquo;s Encrypt certificate:</p>
-<pre><code>certbot certonly --standalone --preferred-challenges http -d fedi.&lt;domain&gt;.com
+<pre><code class="language-console" data-lang="console">certbot certonly --standalone --preferred-challenges http -d fedi.&lt;domain&gt;.com
 </code></pre><p>On the OCI ARM instance, this step the command initially failed for me on connection problems:</p>
-<pre><code>Certbot failed to authenticate some domains (authenticator: standalone). The Certificate Authority reported these problems:
+<pre><code class="language-console" data-lang="console">Certbot failed to authenticate some domains (authenticator: standalone). The Certificate Authority reported these problems:
 Domain: fedi.&lt;domain&gt;.com
 Type:   connection
 Detail: &lt;ip&gt;: Fetching http://fedi.&lt;domain&gt;.com/.well-known/acme-challenge/9JJYxsrHYt-aD86w9Mlp0k4JZajbEGlL1eSSXHkG7c8: Timeout during connect (likely firewall problem)
 </code></pre><p>An nmap scan (<code>nmap -Pn -p 22,80,443 --reason &lt;ip&gt;</code> from outside the server) also shows ports 80 and 443 as &ldquo;filtered&rdquo;:</p>
-<pre><code>PORT     STATE    SERVICE        REASON
+<pre><code class="language-console" data-lang="console">PORT     STATE    SERVICE        REASON
 22/tcp   open     ssh            syn-ack
 80/tcp   filtered http           no-response
 443/tcp  filtered https          no-response
@@ -183,43 +183,43 @@ Detail: &lt;ip&gt;: Fetching http://fedi.&lt;domain&gt;.com/.well-known/acme-cha
 </ul>
 <p>After the two steps, rerunning this command succeeds for me.</p>
 <p>I also notice this line from stdout when I request the certificate:</p>
-<pre><code>This certificate expires on 2023-xx-xx.
+<pre><code class="language-console" data-lang="console">This certificate expires on 2023-xx-xx.
 These files will be updated when the certificate renews.
 Certbot has set up a scheduled task to automatically renew this certificate in the background.
 </code></pre><p>So <a href="https://community.letsencrypt.org/t/what-does-this-mean-exactly-certbot-has-set-up-a-scheduled-task-to-automatically-renew-this-certificate-in-the-background/174615">it did</a>, which means I don&rsquo;t have to manually set up auto-renew. Neat!</p>
 </li>
 <li>
 <p>Copying the nginx config and enabling it:</p>
-<pre><code>cp /opt/akkoma/installation/nginx/akkoma.nginx /etc/nginx/sites-available/akkoma.conf
+<pre><code class="language-console" data-lang="console">cp /opt/akkoma/installation/nginx/akkoma.nginx /etc/nginx/sites-available/akkoma.conf
 ln -s /etc/nginx/sites-available/akkoma.conf /etc/nginx/sites-enabled/akkoma.conf
 </code></pre></li>
 <li>
-<pre><code>nano /etc/nginx/sites-available/akkoma.conf
+<pre><code class="language-console" data-lang="console">nano /etc/nginx/sites-available/akkoma.conf
 </code></pre><p>And replace all occurrences of <code>example.tld</code> to <code>fedi.&lt;domain&gt;.com</code>.</p>
 </li>
 <li>
 <p>Verify the config with</p>
-<pre><code>nginx -t
+<pre><code class="language-console" data-lang="console">nginx -t
 </code></pre></li>
 <li>
 <p>Start nginx service, and optionally Akkoma backend in the foreground with</p>
-<pre><code>systemctl start nginx
+<pre><code class="language-console" data-lang="console">systemctl start nginx
 su akkoma -s $SHELL -lc &quot;MIX_ENV=prod mix phx.server&quot;
 </code></pre><p>Pointing my browser at <code>https://fedi.&lt;domain&gt;.com</code>, I get:</p>
-<pre><code>Welcome to Akkoma!
+<pre><code class="language-console" data-lang="console">Welcome to Akkoma!
 If you're seeing this page, your server works!
 ...
 </code></pre><p>with some more instructions and links to install a frontend. Yay!</p>
 </li>
 <li>
 <p>Now to set up the Akkoma backend as a system service. Looking at the the service config file, the only thing I need to modify this the akkoma user&rsquo;s home directory. So</p>
-<pre><code>nano /opt/akkoma/installation/akkoma.service
+<pre><code class="language-console" data-lang="console">nano /opt/akkoma/installation/akkoma.service
 </code></pre><p>and change this line <code>Environment=&quot;HOME=/var/lib/akkoma&quot;</code> to:</p>
-<pre><code>Environment=&quot;HOME=/opt/akkoma&quot;
+<pre><code class="language-console" data-lang="console">Environment=&quot;HOME=/opt/akkoma&quot;
 </code></pre></li>
 <li>
 <p>Copy the service config file, start it and enable it on boot:</p>
-<pre><code>cp /opt/akkoma/installation/akkoma.service /etc/systemd/system/akkoma.service
+<pre><code class="language-console" data-lang="console">cp /opt/akkoma/installation/akkoma.service /etc/systemd/system/akkoma.service
 systemctl start akkoma
 systemctl enable akkoma
 systemctl restart nginx
@@ -236,29 +236,29 @@ systemctl restart nginx
 <h4 id="installing-a-frontend">Installing A Frontend</h4>
 <ol>
 <li>From what I heard, <code>pleroma-fe</code> is a light-weight minimalist frontend. I&rsquo;ll use it to play around for now:
-<pre><code>cd /opt/akkoma
+<pre><code class="language-console" data-lang="console">cd /opt/akkoma
 su akkoma -s $SHELL -lc &quot;MIX_ENV=prod mix pleroma.frontend install pleroma-fe --ref stable&quot;
 </code></pre><p>Says it&rsquo;s installed to <code>/var/lib/akkoma/static/frontends/pleroma-fe/stable</code>.</p>
 </li>
 <li>And now install <code>admin-fe</code>:
-<pre><code>su akkoma -s $SHELL -lc &quot;MIX_ENV=prod mix pleroma.frontend install admin-fe --ref stable&quot;
+<pre><code class="language-console" data-lang="console">su akkoma -s $SHELL -lc &quot;MIX_ENV=prod mix pleroma.frontend install admin-fe --ref stable&quot;
 </code></pre></li>
 <li>Since we now have a frontend to do administration with, let&rsquo;s not forget to <a href="https://docs.akkoma.dev/stable/configuration/howto_database_config/">activate in-database configuration</a> &ndash; I initially opted out during the config generation step.
 <ul>
 <li>
-<pre><code>nano config/prod.secret.exs
+<pre><code class="language-console" data-lang="console">nano config/prod.secret.exs
 </code></pre>And set <code>config :pleroma, configurable_from_database: true</code> (it&rsquo;s one of the last lines on the very bottom).</li>
 <li>
-<pre><code>su akkoma -s $SHELL -lc &quot;MIX_ENV=prod mix pleroma.config migrate_to_db&quot;
+<pre><code class="language-console" data-lang="console">su akkoma -s $SHELL -lc &quot;MIX_ENV=prod mix pleroma.config migrate_to_db&quot;
 </code></pre>This also triggers some compiling.</li>
 <li>
-<pre><code>systemctl restart akkoma
+<pre><code class="language-console" data-lang="console">systemctl restart akkoma
 </code></pre>so that the change takes effect.</li>
 </ul>
 </li>
 </ol>
 <h4 id="creating-the-admin-user">Creating the admin user</h4>
-<pre><code>su akkoma -s $SHELL -lc &quot;MIX_ENV=prod mix pleroma.user new &lt;username&gt; &lt;your@emailaddress&gt; --admin&quot;
+<pre><code class="language-console" data-lang="console">su akkoma -s $SHELL -lc &quot;MIX_ENV=prod mix pleroma.user new &lt;username&gt; &lt;your@emailaddress&gt; --admin&quot;
 </code></pre><p>The command prints a URL to reset the password &ndash; copy and pasting it to the browser, and logging in &ndash; it works! Finally time to play around with some fun customizations 🎉.</p>
 <h1 id="quick-validations">Quick Validations</h1>
 <ul>
@@ -279,18 +279,16 @@ su akkoma -s $SHELL -lc &quot;MIX_ENV=prod mix pleroma.frontend install pleroma-
           <br>
 
           
+          <a itemprop="sameAs" href="/index.xml" title="RSS">RSS</a>
+
+          
           <a itemprop="sameAs" href="https://github.com/mikihau" title="GitHub">GitHub</a>
 
           <a itemprop="sameAs" href="https://twitter.com/@miki_hau" title="Twitter">Twitter</a>
 
           
 
-          
-          <a itemprop="sameAs" href="/index.xml" title="RSS">RSS</a>
-
-          <br>
-
-          <span itemprop="credit"><a itemprop="url" href="https://github.com/dashdashzako/hugo-journal">Hugo Theme</span>
+          <a itemprop="sameAs" href="https://github.com/dashdashzako/hugo-journal">Theme</a>
 
         </span>
 

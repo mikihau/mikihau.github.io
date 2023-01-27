@@ -6,7 +6,17 @@
     <description>Recent content in Posts on Miki&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 26 Mar 2020 06:32:04 -0800</lastBuildDate><atom:link href="https://mikihau.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 15 Jan 2023 17:29:56 -0800</lastBuildDate><atom:link href="https://mikihau.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Installing an Akkoma Instance for Self Hosting</title>
+      <link>https://mikihau.github.io/post/self-hosting-akkoma/</link>
+      <pubDate>Sun, 15 Jan 2023 17:29:56 -0800</pubDate>
+      
+      <guid>https://mikihau.github.io/post/self-hosting-akkoma/</guid>
+      <description>I&amp;rsquo;ve decided to self-host my own Akkoma (a hard fork of Pleroma) instance, after actively and happily using Mastodon for 2.5 years. Inspired by Snott&amp;rsquo;s awesome and detailed writeup on Akkoma&amp;rsquo;s OTP install, I&amp;rsquo;m also sharing my source installation notes along the way for all the folks on the internet, including my future self &amp;ndash; since I did have a few surprises during the process.
+Unless otherwise noted, all commands below are tested on an ARM-based machine with Ubuntu 22.</description>
+    </item>
+    
     <item>
       <title>Reflecting On My Interviewing Experience As a Mid Level(TM) Software Engineer</title>
       <link>https://mikihau.github.io/post/interviewing-as-a-mid-level-engineer/</link>

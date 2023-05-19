@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="Hugo 0.79.1" />
+
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="author" content="Miki Hau">
+  <meta property="og:url" content="https://mikihau.github.io/post/operating-akkoma/">
+
+  <title>Operating Akkoma - Miki&#39;s Blog</title>
+  <meta property="og:title" content="Operating Akkoma - Miki&#39;s Blog">
+  <meta property="og:type" content="article">
+  <meta name="description" content="">
+
+  <link rel="stylesheet" href="/css/fonts.css">
+  <link rel="stylesheet" href="/css/highlight.css">
+  <link rel="stylesheet" href="/css/journal.css">
+  <link href="/index.xml" rel="alternate" type="application/rss+xml" title="Miki&#39;s Blog">
+
+</head>
+
+<body>
+  <div class="container">
+
+    <nav class="site-nav">
+      <a href="https://mikihau.github.io/">Index</a>
+    </nav>
+
+
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">Operating Akkoma</h1>
+      
+      <time class="post-date" datetime="2023-05-15 12:02:48 PDT">May 15 2023</time>
+    </header>
+
+    
+    <div class="post-content markdown-body">
+      <p>A couple of months into <a href="https://mikihau.github.io/post/self-hosting-akkoma/">self-hosting my Akkoma instance</a>, I find myself doing a couple of operational tasks at a recurring basis. So might as well write them down here for future reference. Again, this is on my ARM-based machine with Ubuntu 22.04, where Akkoma is installed from source.</p>
+<h1 id="backing-up-periodically">Backing Up (Periodically)</h1>
+<p>The <a href="https://docs.akkoma.dev/stable/administration/backup/">doc&rsquo;s backup instructions</a> essentially says we should back up the database, plus a couple of configs and static files/directories.</p>
+<p>So first off, ensure we have a place to put the backup files by creating this backup directory:</p>
+<pre><code class="language-console" data-lang="console">sudo su - root
+mkdir -p /mnt/backups/akkoma
+chown -R akkoma /mnt/backups/akkoma
+chmod o=rw /mnt/backups/akkoma/
+</code></pre><p>Then I whip up a quick script to back up all things mentioned in the doc:</p>
+<pre><code class="language-console" data-lang="console">#!/usr/bin/env bash
+
+echo &quot;Akkoma backup starting&quot;
+
+BACKUP_DIR=/mnt/backups/akkoma/$(date -I)
+mkdir -p $BACKUP_DIR/config
+
+echo &quot;Stopping akkoma instance&quot;
+systemctl stop akkoma
+
+echo &quot;Backing up postgres&quot; 
+sudo -Hiu postgres pg_dump -d akkoma --format=custom -f /tmp/akkoma.pgdump
+mv /tmp/akkoma.pgdump $BACKUP_DIR/akkoma.pgdump
+
+echo &quot;Copying config and static files&quot;
+cp /opt/akkoma/config/prod.secret.exs $BACKUP_DIR/config/prod.secret.exs
+cp /opt/akkoma/config/setup_db.psql $BACKUP_DIR/config/setup_db.psql
+cp -r /var/lib/akkoma/uploads $BACKUP_DIR
+cp -r /var/lib/akkoma/static $BACKUP_DIR
+
+echo &quot;Restarting akkoma instance&quot;
+systemctl start akkoma
+
+echo &quot;Akkoma backup finished at $BACKUP_DIR&quot;
+</code></pre><p>I put this script at <code>/usr/local/bin/akkomabackup</code>.</p>
+<p>My goal is to create a backup once per day, so I also set up a systemd timer to run the backup script periodically. Steps:</p>
+<ol>
+<li>Create the backup service file as <code>/etc/systemd/system/akkoma-backup.service</code>:
+<pre><code>[Unit]
+Description=&quot;Backing up my Akkoma instance&quot;
+
+[Service]
+ExecStart=/usr/local/bin/akkomabackup
+</code></pre></li>
+<li>Create the timer file as <code>/etc/systemd/system/akkoma-backup.timer</code>:
+<pre><code>[Unit]
+Description=&quot;Run akkoma-backup.service 5min after boot and every 24 hours relative to activation time&quot;
+   
+[Timer]
+OnBootSec=5min
+OnUnitActiveSec=24h
+OnCalendar=Mon..Sun *-*-* 10:00:*
+Unit=akkoma-backup.service
+   
+[Install]
+WantedBy=multi-user.target
+</code></pre></li>
+<li>Validate the setup with:
+<pre><code class="language-console" data-lang="console">systemd-analyze verify /etc/systemd/system/akkoma-backup.*
+</code></pre></li>
+<li>Enable the timer:
+<pre><code class="language-console" data-lang="console">systemctl start akkoma-backup.timer
+systemctl enable akkoma-backup.timer
+</code></pre></li>
+<li>Verify that the backup timer works:
+<pre><code class="language-console" data-lang="console">systemctl status akkoma-backup.timer
+systemctl status akkoma-backup.service
+</code></pre><p>If the timer file ever gets changed after it starts, do a <code>systemctl daemon-reload</code> to reapply the change.</p>
+</li>
+</ol>
+<h1 id="renewing-that-tls-certificate">Renewing That TLS Certificate</h1>
+<p>I thought my TLS certificate was going to be renewed automatically, but at one point near my cert expiration, I started getting emails prompting me to renew my cert. Turns out (with <code>systemctl status certbot.service</code>) the renewal has been consistently failing because the script needs port 80, which conflicts with nginx, who also uses port 80. So to manually renew the cert, just do:</p>
+<pre><code class="language-console" data-lang="console">systemctl stop nginx # free up port 80
+/usr/bin/certbot renew
+systemctl start nginx
+</code></pre><p>For an automated solution, I made an edit to <code>/lib/systemd/system/certbot.service</code> by adding</p>
+<pre><code>ExecStartPre=systemctl stop nginx
+ExecStartPost=systemctl start nginx
+</code></pre><p>under <code>[Service]</code>. After running <code>systemctl daemon-reload</code>, the service starts to succeed. (This isn&rsquo;t perfect since every time the renewal script runs, we have a tiny bit of downtime. But hey.)</p>
+<h1 id="upgrading-the-akkoma-instance">Upgrading the Akkoma Instance</h1>
+<p>Upgrading Akkoma usually doesn&rsquo;t come with a big fanfare &ndash; except that, starting v3.8.0, Akkoma requires an Elixir version 1.14 that&rsquo;s not provided by the <code>apt</code> package manager. This brings me some confusion since I&rsquo;ll have to figure out how to install Elixir 1.14, and ensure the systemd service uses that upgraded Elixir runtime.</p>
+<ol>
+<li>Switch to the <code>akkoma</code> user:
+<pre><code class="language-console" data-lang="console">sudo -su akkoma /bin/bash
+cd /opt/akkoma/
+</code></pre></li>
+<li>Download <a href="https://asdf-vm.com/guide/getting-started.html">asdf</a>, the recommended multi-version runtime manager:
+<pre><code class="language-console" data-lang="console">git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.11.3 # latest stable at the time of writing
+</code></pre></li>
+<li>Install asdf:
+<pre><code class="language-console" data-lang="console"># add to ~/.bashrc:
+echo &quot;. $HOME/.asdf/asdf.sh&quot; &gt;&gt; &quot;$HOME&quot;/.bashrc
+echo &quot;. $HOME/.asdf/completions/asdf.bash&quot; &gt;&gt; &quot;$HOME&quot;/.bashrc
+source ~/.bashrc
+# verify
+asdf --version
+</code></pre></li>
+<li>Install Elixir 1.14.2 as required by Akkoma v3.8.0:
+<pre><code class="language-console" data-lang="console"># lock into the specific versions
+touch $HOME/.tool-versions
+echo &quot;erlang 25.0&quot; &gt; $HOME/.tool-versions
+echo &quot;elixir 1.14.2&quot; &gt;&gt; $HOME/.tool-versions
+# install
+asdf plugin-add erlang
+asdf plugin-add elixir
+asdf install
+# verify with
+elixir -v # should be 1.14.2
+</code></pre></li>
+<li>Make sure systemd uses the proper elixir version by editing <code>/etc/systemd/system/akkoma.service</code> (<a href="https://meta.akkoma.dev/t/akkoma-compilation-issues-running-under-v3-8-0-with-elixir-under-asdf-and-user-running-under-systemd/442/8">reference</a>). Two changes to this file are required:
+<ul>
+<li>Adding</li>
+</ul>
+<pre><code class="language-console" data-lang="console">Environment=&quot;PATH=/opt/akkoma/.asdf/shims:/opt/akkoma/.asdf/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin&quot;
+</code></pre><ul>
+<li>And changing the <code>ExecStart</code> directive to</li>
+</ul>
+<pre><code class="language-console" data-lang="console">ExecStart=/opt/akkoma/.asdf/shims/mix phx.server
+</code></pre></li>
+</ol>
+<p>Moving on to the real upgrading work, <a href="https://docs.akkoma.dev/stable/administration/updating/">the doc</a> had it pretty nicely.</p>
+<ol>
+<li>Get the code:
+<pre><code class="language-console" data-lang="console">sudo -su akkoma # switch to user 'akkoma'
+cd /opt/akkoma/
+git fetch
+git checkout $(git tag -l | grep -v 'rc[0-9]*$' | sort -V | tail -n 1)
+</code></pre></li>
+<li>Get the dependencies, and compile the code:
+<pre><code class="language-console" data-lang="console">export MIX_ENV=prod
+mix deps.get
+mix compile
+</code></pre></li>
+<li>Migrate the DB and install frontends:
+<pre><code class="language-console" data-lang="console">exit # (OCI specific) go back to the ubuntu user
+sudo systemctl stop akkoma
+sudo -su akkoma
+MIX_ENV=prod mix ecto.migrate
+MIX_ENV=prod mix pleroma.frontend install pleroma-fe --ref stable
+MIX_ENV=prod mix pleroma.frontend install admin-fe --ref stable
+</code></pre></li>
+<li>Optionally verify that the new backend version works, by starting the app without systemd (then stop the app):
+<pre><code class="language-console" data-lang="console">MIX_ENV=prod mix phx.server
+</code></pre></li>
+<li>If all goes well, restart the service with systemd:
+<pre><code class="language-console" data-lang="console">exit # exit # (OCI specific) go back to the ubuntu user
+sudo systemctl start akkoma
+</code></pre></li>
+<li>Verify with
+<pre><code class="language-console" data-lang="console">systemctl status akkoma
+# and
+journalctl -u akkoma.service -f
+</code></pre></li>
+</ol>
+<h1 id="getting-another-admin">Getting Another Admin</h1>
+<p>I&rsquo;m really fortunate to have a volunteer sys admin for this Akkoma instance. so I&rsquo;m making sure that they have root access on the server to be able to handle any incidents/issues. Not Akkoma related, just Ubuntu/Linux stuff.</p>
+<ol>
+<li>
+<p>Create a linux user account:</p>
+<pre><code class="language-console" data-lang="console">sudo adduser &lt;username&gt;
+</code></pre><p>It&rsquo;ll prompt to set up a password, and a couple of other information. (Look, it even has a Room Number field! Wow in the old days sys admins used to sit in <em>separate rooms</em>.)</p>
+</li>
+<li>
+<p>Make sure the user can ssh into the server. I don&rsquo;t have password-based access to the server (well I can enable password-based access, but let&rsquo;s say I don&rsquo;t), so I&rsquo;ll just copy the public key manually:</p>
+<pre><code class="language-console" data-lang="console">sudo -su root
+sudo -su &lt;username&gt;
+mkdir -p ~/.ssh
+echo &lt;copied_public_key&gt; &gt;&gt; ~/.ssh/authorized_keys
+</code></pre><p>Now testing it out:</p>
+<pre><code class="language-console" data-lang="console">ssh -i &lt;path/to/private/key&gt; &lt;username&gt;@&lt;host&gt;
+</code></pre></li>
+<li>
+<p>Grant root access to the user:</p>
+<pre><code class="language-console" data-lang="console">sudo -su root
+usermod -aG sudo dbxadmin # add to the sudo group
+</code></pre><p>Optionally, if you want the user to run sudo commands without getting prompted for a password:</p>
+<pre><code class="language-console" data-lang="console">visudo
+</code></pre><p>And add this line <code>&lt;username&gt; ALL=(ALL) NOPASSWD:ALL</code> to the bottom of the editor.</p>
+</li>
+</ol>
+<h1 id="monitoring">Monitoring</h1>
+<p>Looking into monitoring solutions for hobby projects, I bumped into <a href="https://ultramookie.com/2023/03/monitoring-basics/">the Monitoring Basics by Steve Mookie Kong</a>. Really the article is more than I need now, but I like the idea of using third-party hosted services to monitor my instance &ndash; self-hosted monitoring solutions runs the risk of being down themselves. For now I use <a href="https://betterstack.com/better-uptime">Better Uptime</a> for external health pings + uptime dashboard, and <a href="https://www.datadoghq.com/">Datadog</a> for internal metrics.</p>
+
+    </div>
+
+  </article>
+
+
+      <footer class="site-footer">
+        <span itemscope itemtype="http://schema.org/Person">
+          
+          <span itemprop="name"><a itemprop="url" href="https://mikihau.github.io/">Miki Hau</span>
+
+          <br>
+
+          
+          <a itemprop="sameAs" href="/index.xml" title="RSS">RSS</a>
+
+          
+          <a itemprop="sameAs" href="https://github.com/mikihau" title="GitHub">GitHub</a>
+
+          <a itemprop="sameAs" href="https://twitter.com/@miki_hau" title="Twitter">Twitter</a>
+
+          
+
+          <a itemprop="sameAs" href="https://github.com/dashdashzako/hugo-journal">Theme</a>
+
+        </span>
+
+        
+      </footer>
+    </div>
+
+  <script src="/js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+
+  </body>
+</html>
+

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>About on Miki&#39;s Blog</title>
+    <link>https://mikihau.github.io/about/</link>
+    <description>Recent content in About on Miki&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Mon, 29 May 2023 15:04:46 -0600</lastBuildDate><atom:link href="https://mikihau.github.io/about/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>About</title>
+      <link>https://mikihau.github.io/about/about/</link>
+      <pubDate>Mon, 29 May 2023 15:04:46 -0600</pubDate>
+      
+      <guid>https://mikihau.github.io/about/about/</guid>
+      <description>This is my blog where I jot down things that I believe are worth sharing, whether it&amp;rsquo;s for the benefit of someone else on the internet, or simply for my own recollection. It&amp;rsquo;s also a platform for showing off what I&amp;rsquo;ve done. With that in mind, I strive to keep this blog focused on technical content, covering topics such as coding, software development, and programming career.</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,53 +1,74 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
-  
   <url>
+    <loc>https://mikihau.github.io/about/</loc>
+    <lastmod>2023-05-29T15:04:46-06:00</lastmod>
+  </url><url>
+    <loc>https://mikihau.github.io/about/about/</loc>
+    <lastmod>2023-05-29T15:04:46-06:00</lastmod>
+  </url><url>
     <loc>https://mikihau.github.io/</loc>
+    <lastmod>2023-05-29T15:04:46-06:00</lastmod>
+  </url><url>
+    <loc>https://mikihau.github.io/series/akkoma/</loc>
     <lastmod>2023-05-15T12:02:48-07:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://mikihau.github.io/post/operating-akkoma/</loc>
+  </url><url>
+    <loc>https://mikihau.github.io/tags/how-to/</loc>
     <lastmod>2023-05-15T12:02:48-07:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://mikihau.github.io/post/</loc>
+  </url><url>
+    <loc>https://mikihau.github.io/posts/operating-akkoma/</loc>
     <lastmod>2023-05-15T12:02:48-07:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://mikihau.github.io/post/self-hosting-akkoma/</loc>
+  </url><url>
+    <loc>https://mikihau.github.io/tags/operations/</loc>
+    <lastmod>2023-05-15T12:02:48-07:00</lastmod>
+  </url><url>
+    <loc>https://mikihau.github.io/posts/</loc>
+    <lastmod>2023-05-15T12:02:48-07:00</lastmod>
+  </url><url>
+    <loc>https://mikihau.github.io/tags/self-hosting/</loc>
+    <lastmod>2023-05-15T12:02:48-07:00</lastmod>
+  </url><url>
+    <loc>https://mikihau.github.io/series/</loc>
+    <lastmod>2023-05-15T12:02:48-07:00</lastmod>
+  </url><url>
+    <loc>https://mikihau.github.io/tags/</loc>
+    <lastmod>2023-05-15T12:02:48-07:00</lastmod>
+  </url><url>
+    <loc>https://mikihau.github.io/tags/ubuntu/</loc>
+    <lastmod>2023-05-15T12:02:48-07:00</lastmod>
+  </url><url>
+    <loc>https://mikihau.github.io/posts/self-hosting-akkoma/</loc>
     <lastmod>2023-01-15T17:29:56-08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://mikihau.github.io/post/interviewing-as-a-mid-level-engineer/</loc>
+  </url><url>
+    <loc>https://mikihau.github.io/tags/cooperate/</loc>
     <lastmod>2020-03-26T06:32:04-08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://mikihau.github.io/post/publishing-my-first-chrome-extension/</loc>
+  </url><url>
+    <loc>https://mikihau.github.io/tags/hiring/</loc>
+    <lastmod>2020-03-26T06:32:04-08:00</lastmod>
+  </url><url>
+    <loc>https://mikihau.github.io/posts/interviewing-as-a-mid-level-engineer/</loc>
+    <lastmod>2020-03-26T06:32:04-08:00</lastmod>
+  </url><url>
+    <loc>https://mikihau.github.io/tags/chrome/</loc>
     <lastmod>2019-10-14T20:32:09-07:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://mikihau.github.io/post/book-review-the-managers-path/</loc>
+  </url><url>
+    <loc>https://mikihau.github.io/tags/hack/</loc>
+    <lastmod>2019-10-14T20:32:09-07:00</lastmod>
+  </url><url>
+    <loc>https://mikihau.github.io/posts/publishing-my-first-chrome-extension/</loc>
+    <lastmod>2019-10-14T20:32:09-07:00</lastmod>
+  </url><url>
+    <loc>https://mikihau.github.io/posts/book-review-the-managers-path/</loc>
     <lastmod>2019-04-29T22:15:09-08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://mikihau.github.io/post/building-minesweeper-with-go/</loc>
+  </url><url>
+    <loc>https://mikihau.github.io/tags/books/</loc>
+    <lastmod>2019-04-29T22:15:09-08:00</lastmod>
+  </url><url>
+    <loc>https://mikihau.github.io/posts/building-minesweeper-with-go/</loc>
+    <lastmod>2019-02-28T16:35:04-08:00</lastmod>
+  </url><url>
+    <loc>https://mikihau.github.io/tags/go/</loc>
     <lastmod>2019-02-28T16:35:04-08:00</lastmod>
   </url>
-  
-  <url>
-    <loc>https://mikihau.github.io/categories/</loc>
-  </url>
-  
-  <url>
-    <loc>https://mikihau.github.io/tags/</loc>
-  </url>
-  
 </urlset>

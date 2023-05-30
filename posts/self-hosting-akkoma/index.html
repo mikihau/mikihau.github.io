@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
+<head>
+    
+<script defer language="javascript" type="text/javascript" src="https://mikihau.github.io/js/light_dark.js"></script>
+<script defer language="javascript" type="text/javascript" src="https://mikihau.github.io/js/tabs.js"></script>
+
+
+<script defer language="javascript" type="text/javascript" src="https://mikihau.github.io/js/katex.min.js"></script>
+<script defer language="javascript" type="text/javascript" src="https://mikihau.github.io/js/auto-render.min.js"></script>
+
+
+
+
+
+<script defer language="javascript" type="text/javascript" src="https://mikihau.github.io/js/katex.js"></script>
+<script defer language="javascript" type="text/javascript" src="https://mikihau.github.io/js/toc.js"></script>
+
+
+
+
+
+    
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    
+    
+
+
+
+
+
+  
+ 
+
+ 
+
+
+  
+  
+  
+ 
+
+
+
+  
+  
+    
+  
+  
+
+
+
+
+<title itemprop="name">Miki Hau - Installing an Akkoma Instance</title>
+<meta property="og:title" content=Miki&#32;Hau&#32;-&#32;Installing&#32;an&#32;Akkoma&#32;Instance />
+<meta name="twitter:title" content=Miki&#32;Hau&#32;-&#32;Installing&#32;an&#32;Akkoma&#32;Instance />
+<meta itemprop="name" content=Miki&#32;Hau&#32;-&#32;Installing&#32;an&#32;Akkoma&#32;Instance />
+<meta name="application-name" content=Miki&#32;Hau&#32;-&#32;Installing&#32;an&#32;Akkoma&#32;Instance />
+<meta property="og:site_name" content="Miki&#39;s Blog" />
+
+
+<meta name="description" content="" />
+<meta itemprop="description" content="" />
+<meta property="og:description" content="" />
+<meta name="twitter:description" content="" />
+
+
+<base href="https://mikihau.github.io/posts/self-hosting-akkoma/" />
+<link rel="canonical" href="https://mikihau.github.io/posts/self-hosting-akkoma/" itemprop="url" />
+<meta name="url" content="https://mikihau.github.io/posts/self-hosting-akkoma/" />
+<meta name="twitter:url" content="https://mikihau.github.io/posts/self-hosting-akkoma/" />
+<meta property="og:url" content="https://mikihau.github.io/posts/self-hosting-akkoma/" />
+
+
+
+
+
+<meta property="og:updated_time" content=15001-15-05T129:56:23-0800 />
+
+
+<link rel="sitemap" type="application/xml" title="Sitemap" href='https://mikihau.github.io/sitemap.xml' />
+
+<meta name="robots" content="index,follow" />
+<meta name="googlebot" content="index,follow" />
+
+
+<meta name="twitter:site" content="" />
+<meta name="twitter:creator" content="" />
+<meta property="fb:admins" content="" />
+
+
+<meta name="apple-mobile-web-app-title" content="Miki&#39;s Blog" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+
+
+
+
+
+ 
+
+
+<meta property="og:type" content="article" />
+<meta property="article:publisher" content="" />
+<meta property="og:article:published_time" content=15001-15-05T129:56:23-0800 />
+<meta property="article:published_time" content=15001-15-05T129:56:23-0800 />
+
+
+
+
+
+<script defer type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "Article",
+    "headline": "Installing an Akkoma Instance",
+    "author": {
+      "@type": "Person",
+      "name": "https:\/\/github.com\/mikihau\/"
+    },
+    "datePublished": "2023-01-15",
+    "description": "",
+    "wordCount":  2139 ,
+    "mainEntityOfPage": "True",
+    "dateModified": "2023-01-15",
+    "image": {
+      "@type": "imageObject",
+      "url": ""
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Miki\u0027s Blog",
+      "logo": {
+        "@type": "imageObject",
+        "url": ""
+      }
+    }
+  }
+</script>
+
+
+
+<meta name="generator" content="Hugo 0.112.5">
+
+
+    
+    <link type="text/css" rel="stylesheet" href="https://mikihau.github.io/css/poole.css">
+<link type="text/css" rel="stylesheet" href="https://mikihau.github.io/css/syntax.css">
+<link type="text/css" rel="stylesheet" href="https://mikihau.github.io/css/hyde.css">
+<link type="text/css" rel="stylesheet" href="https://mikihau.github.io/css/poison.css">
+<link type="text/css" rel="stylesheet" href="https://mikihau.github.io/css/fonts.css">
+<link type="text/css" rel="stylesheet" href="https://mikihau.github.io/css/katex.min.css">
+<link type="text/css" rel="stylesheet" href="https://mikihau.github.io/css/tabs.css">
+
+
+<link type="text/css" rel="stylesheet" href="https://mikihau.github.io/css/custom.css">
+
+
+    
+    <style>
+    body {
+        --sidebar-bg-color: #202020;
+        --sidebar-img-border-color: #515151;
+        --sidebar-p-color: #909090;
+        --sidebar-h1-color: #FFF;
+        --sidebar-a-color: #FFF;
+        --sidebar-socials-color: #FFF;
+        --text-color: #222;
+        --bkg-color: #FAF9F6;
+        --post-title-color: #303030;
+        --list-color: #5a5a5a;
+        --link-color: #268bd2;
+        --date-color: #515151;
+        --table-border-color: #E5E5E5;
+        --table-stripe-color: #F9F9F9;
+        --code-color: #bf616a;
+        --code-background-color: #E5E5E5;
+        --moon-sun-color: #FFF;
+        --moon-sun-background-color: #515151;
+    }
+    body.dark-theme {
+        --text-color: #eee;
+        --bkg-color: #121212;
+        --post-title-color: #DBE2E9;
+        --list-color: #9d9d9d;
+        --link-color: #268bd2;
+        --date-color: #9a9a9a;
+        --table-border-color: #515151;
+        --table-stripe-color: #202020;
+        --code-color: #ff7f7f;
+        --code-background-color: #393D47;
+    }
+    body {
+        background-color: var(--bkg-color);
+    }
+</style>
+
+</head>
+
+    <body class="dark-theme">
+        <div class="wrapper">
+            <aside class="sidebar">
+    <div class="container sidebar-sticky">
+        <div class="light-dark" align="right">
+    <button class="btn-light-dark">
+        <svg class="moon" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 16 16">
+            <path fill="currentColor" d="M6 .278a.768.768 0 0 1 .08.858a7.208 7.208 0 0 0-.878 3.46c0 4.021 3.278 7.277 7.318 7.277c.527 0 1.04-.055 1.533-.16a.787.787 0 0 1 .81.316a.733.733 0 0 1-.031.893A8.349 8.349 0 0 1 8.344 16C3.734 16 0 12.286 0 7.71C0 4.266 2.114 1.312 5.124.06A.752.752 0 0 1 6 .278z"/>
+        </svg>
+        <svg class="sun" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 16 16">
+            <path fill="currentColor" d="M8 12a4 4 0 1 0 0-8a4 4 0 0 0 0 8zM8 0a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 0zm0 13a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 13zm8-5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2a.5.5 0 0 1 .5.5zM3 8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2A.5.5 0 0 1 3 8zm10.657-5.657a.5.5 0 0 1 0 .707l-1.414 1.415a.5.5 0 1 1-.707-.708l1.414-1.414a.5.5 0 0 1 .707 0zm-9.193 9.193a.5.5 0 0 1 0 .707L3.05 13.657a.5.5 0 0 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0zm9.193 2.121a.5.5 0 0 1-.707 0l-1.414-1.414a.5.5 0 0 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .707zM4.464 4.465a.5.5 0 0 1-.707 0L2.343 3.05a.5.5 0 1 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .708z"/>
+        </svg>
+    </button>
+</div>
+
+        <div class="sidebar-about">
+    <h1 class="brand">
+        
+            <a href="https://mikihau.github.io/">
+                <img src="/images/brand-image.jpeg" alt="brand image">
+            </a>
+        
+        
+            <a href="https://mikihau.github.io/">
+                <h1>Miki Hau</h1>
+            </a>
+        
+    </h1>
+    <p class="lead">
+    Miki&#39;s footprints on coding, problem solving, and software development.
+    </p>
+</div>
+
+        <nav>
+    <ul class="sidebar-nav">
+
+        
+        
+        
+        
+            
+
+            
+                
+                    <li class="heading">
+                        <a href="/about/">About</a>
+                    </li>
+                    
+                
+            
+                
+            
+            
+                
+            
+                
+            
+        
+        
+            
+
+            
+                
+            
+                
+                    <li class="heading">
+                        <a href="/posts/">Posts</a>
+                    </li>
+                    
+                        <li class="sub-heading">
+                            Recent
+                        </li>
+                        
+                            <li class="bullet">
+                                <a href="https://mikihau.github.io/posts/operating-akkoma/">Operating Akkoma</a>
+                            </li>
+                        
+                            <li class="bullet">
+                                <a href="https://mikihau.github.io/posts/self-hosting-akkoma/">Installing an Akkoma Instance</a>
+                            </li>
+                        
+                            <li class="bullet">
+                                <a href="https://mikihau.github.io/posts/interviewing-as-a-mid-level-engineer/">Reflecting On My Interviewing Experience As a Mid Level(TM) Software Engineer</a>
+                            </li>
+                        
+                            <li class="bullet">
+                                <a href="https://mikihau.github.io/posts/publishing-my-first-chrome-extension/">Publishing My First Chrome Extension</a>
+                            </li>
+                        
+                            <li class="bullet">
+                                <a href="https://mikihau.github.io/posts/book-review-the-managers-path/">Book Review: The Manager&#39;s Path</a>
+                            </li>
+                        
+                    
+                
+            
+            
+                
+            
+                
+            
+        
+
+    </ul>
+</nav>
+
+        
+    <a target="_blank" class="social" href="https://github.com/mikihau/">
+        <svg xmlns="http://www.w3.org/2000/svg" width="1.2em" height="1.2em" viewBox="-2 -2 24 24">
+            <path fill="currentColor" d="M18.88 1.099C18.147.366 17.265 0 16.233 0H3.746C2.714 0 1.832.366 1.099 1.099C.366 1.832 0 2.714 0 3.746v12.487c0 1.032.366 1.914 1.099 2.647c.733.733 1.615 1.099 2.647 1.099H6.66c.19 0 .333-.007.429-.02a.504.504 0 0 0 .286-.169c.095-.1.143-.245.143-.435l-.007-.885c-.004-.564-.006-1.01-.006-1.34l-.3.052c-.19.035-.43.05-.721.046a5.555 5.555 0 0 1-.904-.091a2.026 2.026 0 0 1-.872-.39a1.651 1.651 0 0 1-.572-.8l-.13-.3a3.25 3.25 0 0 0-.41-.663c-.186-.243-.375-.407-.566-.494l-.09-.065a.956.956 0 0 1-.17-.156a.723.723 0 0 1-.117-.182c-.026-.061-.004-.111.065-.15c.07-.04.195-.059.378-.059l.26.04c.173.034.388.138.643.311a2.1 2.1 0 0 1 .631.677c.2.355.44.626.722.813c.282.186.566.28.852.28c.286 0 .533-.022.742-.065a2.59 2.59 0 0 0 .585-.196c.078-.58.29-1.028.637-1.34a8.907 8.907 0 0 1-1.333-.234a5.314 5.314 0 0 1-1.223-.507a3.5 3.5 0 0 1-1.047-.872c-.277-.347-.505-.802-.683-1.365c-.177-.564-.266-1.215-.266-1.952c0-1.049.342-1.942 1.027-2.68c-.32-.788-.29-1.673.091-2.652c.252-.079.625-.02 1.119.175c.494.195.856.362 1.086.5c.23.14.414.257.553.352a9.233 9.233 0 0 1 2.497-.338c.859 0 1.691.113 2.498.338l.494-.312a6.997 6.997 0 0 1 1.197-.572c.46-.174.81-.221 1.054-.143c.39.98.424 1.864.103 2.653c.685.737 1.028 1.63 1.028 2.68c0 .737-.089 1.39-.267 1.957c-.177.568-.407 1.023-.689 1.366a3.65 3.65 0 0 1-1.053.865c-.42.234-.828.403-1.223.507a8.9 8.9 0 0 1-1.333.235c.45.39.676 1.005.676 1.846v3.11c0 .147.021.266.065.357a.36.36 0 0 0 .208.189c.096.034.18.056.254.064c.074.01.18.013.318.013h2.914c1.032 0 1.914-.366 2.647-1.099c.732-.732 1.099-1.615 1.099-2.647V3.746c0-1.032-.367-1.914-1.1-2.647z"/>
+        </svg>
+    </a>
+
+
+
+
+
+    <a target="_blank" class="social" rel="me" href="https://fedi.fourhappylions.com/">
+        <svg xmlns="http://www.w3.org/2000/svg" width="1.2em" height="1.2em" viewBox="0 0 24 24">
+            <path fill="currentColor" d="M20.94 14c-.28 1.41-2.44 2.96-4.97 3.26c-1.31.15-2.6.3-3.97.24c-2.25-.11-4-.54-4-.54v.62c.32 2.22 2.22 2.35 4.03 2.42c1.82.05 3.44-.46 3.44-.46l.08 1.65s-1.28.68-3.55.81c-1.25.07-2.81-.03-4.62-.5c-3.92-1.05-4.6-5.24-4.7-9.5l-.01-3.43c0-4.34 2.83-5.61 2.83-5.61C6.95 2.3 9.41 2 11.97 2h.06c2.56 0 5.02.3 6.47.96c0 0 2.83 1.27 2.83 5.61c0 0 .04 3.21-.39 5.43M18 8.91c0-1.08-.3-1.91-.85-2.56c-.56-.63-1.3-.96-2.23-.96c-1.06 0-1.87.41-2.42 1.23l-.5.88l-.5-.88c-.56-.82-1.36-1.23-2.43-1.23c-.92 0-1.66.33-2.23.96C6.29 7 6 7.83 6 8.91v5.26h2.1V9.06c0-1.06.45-1.62 1.36-1.62c1 0 1.5.65 1.5 1.93v2.79h2.07V9.37c0-1.28.5-1.93 1.51-1.93c.9 0 1.35.56 1.35 1.62v5.11H18V8.91Z"/>
+        </svg>
+    </a>
+
+
+
+
+
+
+
+    <a target="_blank" class="social" href="https://mikihau.github.io//posts/index.xml">
+        <svg version="1.0" xmlns="http://www.w3.org/2000/svg" width="1em" height="1.2em" viewBox="0 0 1280.000000 1280.000000" preserveAspectRatio="xMidYMid meet">
+            <g transform="translate(0.000000,1280.000000) scale(0.100000,-0.100000)"
+fill="#000000" stroke="none">
+                <path fill="currentColor" d="M2295 11929 c-284 -12 -642 -45 -707 -65 -17 -5 -18 -63 -18 -1039 0
+-569 4 -1036 8 -1039 5 -3 74 6 153 19 510 86 1168 95 1789 25 1348 -153 2602
+-677 3670 -1531 385 -308 820 -744 1126 -1129 842 -1060 1362 -2313 1514
+-3650 70 -621 61 -1279 -25 -1789 -13 -79 -22 -148 -19 -153 3 -4 471 -8 1039
+-8 l1035 0 5 23 c51 225 85 942 67 1419 -23 605 -77 1044 -198 1617 -294 1400
+-927 2734 -1823 3846 -1043 1295 -2364 2259 -3909 2854 -1158 447 -2451 656
+-3707 600z"/>
+                <path fill="currentColor" d="M2255 7845 c-269 -25 -620 -81 -667 -106 -17 -9 -18 -55 -18 -899 0
+-706 3 -890 13 -890 6 0 66 18 132 41 130 44 288 79 467 105 154 21 577 30
+749 15 1207 -107 2267 -823 2814 -1902 166 -327 268 -637 330 -1001 38 -227
+48 -384 42 -662 -8 -348 -44 -590 -126 -831 -23 -66 -41 -126 -41 -132 0 -10
+184 -13 890 -13 844 0 890 1 899 18 27 50 88 452 110 725 14 162 14 624 1 782
+-59 703 -233 1323 -545 1945 -481 956 -1313 1788 -2270 2268 -620 310 -1239
+483 -1940 542 -165 14 -669 10 -840 -5z"/>
+                <path fill="currentColor" d="M2519 3815 c-391 -66 -725 -336 -868 -703 -79 -201 -96 -462 -45
+-677 83 -344 338 -641 666 -774 116 -47 205 -69 330 -80 412 -39 811 153 1040
+500 193 292 240 648 128 981 -135 403 -492 699 -914 757 -100 14 -241 12 -337
+-4z"/>
+            </g>
+        </svg>
+    </a>
+
+
+    <a target="_blank" class="social" href="mikihau@yahoo.com">
+        <svg
+            width="1.2em" height="1.2em" viewBox="-2 -2.5 448 512"
+            xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+            xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+            xmlns="http://www.w3.org/2000/svg"
+            xmlns:dc="http://purl.org/dc/elements/1.1/"
+            xmlns:ns1="http://sozi.baierouge.fr"
+            xmlns:cc="http://web.resource.org/cc/"
+            xmlns:xlink="http://www.w3.org/1999/xlink"
+            xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+            version="1.1"
+        >
+            <g
+                id="Layer_2"
+                transform="scale(2.3,3)"
+            >
+                <path
+                    stroke="#202020"
+                    stroke-width="8"
+                    stroke-miterlimit="10"
+                    d="m194.77 146.09c0 6.627-5.373 12-12 12h-166c-6.627 0-12-5.373-12-12v-96.226c0-6.627 5.373-12 12-12h166c6.627 0 12 5.373 12 12v96.226z"
+                    fill="currentColor"
+                />
+            </g>
+            <g
+                id="Layer_3"
+                transform="scale(2.3,3)"
+                stroke="#202020"
+                stroke-width="8"
+                stroke-miterlimit="10"
+                fill="currentColor"
+            >
+                <polyline points="10.409 41.273 99.5 148 187.27 42.409"/>
+                <line
+                    y2="111.95"
+                    x1="9.318"
+                    x2="65.909"
+                    y1="153.32"
+                />
+                <line
+                    y2="153.32"
+                    x1="128.86"
+                    x2="189.32"
+                    y1="108.55"
+                />
+            </g>
+            <metadata>
+                <rdf:RDF>
+                    <cc:Work>
+                        <dc:format>image/svg+xml</dc:format>
+                        <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+                        <cc:license rdf:resource="http://creativecommons.org/licenses/publicdomain/"/>
+                        <dc:publisher>
+                            <cc:Agent rdf:about="http://openclipart.org/">
+                                <dc:title>Openclipart</dc:title>
+                            </cc:Agent>
+                        </dc:publisher>
+                    </cc:Work>
+                    <cc:License rdf:about="http://creativecommons.org/licenses/publicdomain/">
+                        <cc:permits rdf:resource="http://creativecommons.org/ns#Reproduction"/>
+                        <cc:permits rdf:resource="http://creativecommons.org/ns#Distribution"/>
+                        <cc:permits rdf:resource="http://creativecommons.org/ns#DerivativeWorks"/>
+                    </cc:License>
+                </rdf:RDF>
+            </metadata>
+        </svg>
+    </a>
+
+
+        <p class="footnote">
+powered by <a target="_blank" href="https://gohugo.io">Hugo</a> | themed with <a target="_blank" href="https://github.com/lukeorth/poison">poison</a>
+    <br>
+    &copy; 2023 Miki&#39;s Blog. All rights reserved.
+</p>
+
+  </div>
+</aside>
+
+            <main class="content container">
+                <div class="post">
+  <div class="info">
+    <h1 class="post-title">
+        <a href="https://mikihau.github.io/posts/self-hosting-akkoma/">Installing an Akkoma Instance</a>
+    </h1>
+    <time datetime="2023-01-15T17:29:56-0800" class="post-date">
+        January 15, 2023
+    </time>
+    
+    <ul class="tags">
+        
+        <li class="tag-how-to">
+            <a href="https://mikihau.github.io/tags/how-to">how-to</a>
+        </li>
+        
+        <li class="tag-self hosting">
+            <a href="https://mikihau.github.io/tags/self-hosting">self hosting</a>
+        </li>
+        
+        <li class="tag-ubuntu">
+            <a href="https://mikihau.github.io/tags/ubuntu">ubuntu</a>
+        </li>
+        
+    </ul>
+    
+    
+    
+    
+        <p class="seriesname">
+            Series: <a href="https://mikihau.github.io/series/akkoma">Akkoma</a>
+        </p>
+    
+    
+    
+</div>
+
+  <p>I&rsquo;ve decided to self-host my own <a href="https://docs.akkoma.dev/stable/">Akkoma</a> (a hard fork of <a href="https://pleroma.social/">Pleroma</a>) instance, after actively and happily using Mastodon for 2.5 years. Inspired by <a href="https://the.teabag.ninja/posts/2022/11/installing-akkoma-on-your-host/">The Teabag Ninja&rsquo;s awesome and detailed writeup on Akkoma&rsquo;s OTP install</a>, I&rsquo;m also sharing my source installation notes along the way for all the folks on the internet, including my future self &ndash; since I did have a few surprises during the process.</p>
+<p>Unless otherwise noted, all commands below are tested on an ARM-based machine with Ubuntu 22.04, for an Akkoma install from source.</p>
+<h1 id="a-word-of-warning-hosting-the-instance-on-a-subdomain-with-a-different-account-identifier">A Word of Warning: Hosting the Instance on a (Sub)domain With a Different Account Identifier</h1>
+<p>I&rsquo;m putting this down first, because this burnt me so bad, that I had to tear down the entire installation, and re-install the instance under a different subdomain. Read this if you&rsquo;re like me, who:</p>
+<ul>
+<li>already hosts content on <code>domain.com</code>,</li>
+<li>is thinking of hosting the instance under <code>subdomain.domain.com</code>,</li>
+<li>while ensuring your username has the form <code>@user@domain.com</code> instead of <code>@user@subdomain.domain.com</code>.</li>
+</ul>
+<p>TL;DR: this is achievable on Akkoma (or any fediverse software that supports this), but with a few very important caveats:</p>
+<ul>
+<li>You need to have the ability to set up multiple external 301 redirects for <code>domain.com</code>. The Pleroma/Akkoma doc <a href="https://docs.akkoma.dev/stable/configuration/how_to_serve_another_domain_for_webfinger/">explains why with the WebFinger protocol</a>, but turns out you will have to proxy/redirect not only <code>.well-known/host-meta</code>, but <strong>all three</strong> different well-known endpoints(<a href="https://aeracode.org/2022/11/01/fediverse-custom-domains/">reference</a>): <code>host-meta</code>, <code>nodeinfo</code>, and <code>webfinger</code>. Especially the <code>webfinger</code> endpoint mentioned in the docs of <a href="https://docs.joinmastodon.org/admin/config/#web_domain">Mastodon</a> and <a href="https://docs.gotosocial.org/en/latest/installation_guide/advanced/#can-i-host-my-instance-at-fediexampleorg-but-have-just-exampleorg-in-my-username">GoToSocial</a> &ndash; which Akkoma/Pleroma docs seem to be missing.</li>
+<li>You have <strong>only one chance</strong> to configure this right &ndash; before your instance starts federating with other instances. Otherwise, the other instaces will be confused about the identity of users on your instance, and there&rsquo;s no way to ask them to correct it &ndash; because you don&rsquo;t control those other instances.</li>
+</ul>
+<p>Since my contents on <code>domain.com</code> is hosted on Gitlab Pages, which per <a href="https://docs.gitlab.com/ee/user/project/pages/redirects.html">their instructions</a> does not support external redirects (yet), here are my alternatives:</p>
+<ul>
+<li>Serving static assets for <code>host-meta</code>, <code>nodeinfo</code> (these two are just static content), and each user on my instance for <code>webfinger</code>(this endpoint has query parameters), so that the lookup finds them.</li>
+<li>Just settle for identifiers with the subdomain like <code>@user@subdomain.domain.com</code>. (I eventually went for this this option.)</li>
+</ul>
+<p>Just so that you mess things up and have to start from scratch like I did, <a href="https://johnmee.com/how-to-reinstall-postgresql-on-ubuntu">here</a>&rsquo;s how you uninstall and reinstall Postgres on Ubuntu 🥲.</p>
+<h1 id="setting-up-a-host-server">Setting Up a Host Server</h1>
+<h4 id="with-oracle-cloud-infrastructure">With Oracle Cloud Infrastructure</h4>
+<p>My final setup is on an ARM-based OCI instance on their generous <a href="https://www.oracle.com/cloud/free/">free tier offering</a>, with the acknowledgement/expectation that this free tier may change in the future. To setup an account and create an instance, I follow <a href="https://www.seenlyst.com/blog/oracle-cloud-free-vps-out-of-capacity/">this tutorial</a> &ndash; admittedly including the script that, once in a while, checks if an instance is available in my home region. I&rsquo;m lucky to have an instance created in about a week for my region.</p>
+<p>Once the instance is created and a public IP address attached, I have no issues logging in with the ssh key. The default user is <code>ubuntu</code>, but running <code>sudo &lt;command&gt;</code> or switching to root (<code>sudo su - root</code>) does not require a password &ndash; this is important because the super user permission is required to install Akkoma on the server.</p>
+<p>OCI&rsquo;s Ubuntu instances are firewall protected by both the OS&rsquo;s iptables, and the VCN attached to the instance (we&rsquo;ll see later), so don&rsquo;t be surprised if a fresh instance doesn&rsquo;t allow most ingress TCP connections.</p>
+<h4 id="with-vultr">With Vultr</h4>
+<p>I also get an instance with <a href="https://vultr.com">Vultr</a> &ndash; they run year-round promos, allowing you to try out their instances for free for some initial periods of time. Akkoma&rsquo;s resource consumption is minimal, so a humble $5/month instance with 1 vCPU, 1GB memory, and 1T bandwidth should be able to handle myself as the sole user of the app.</p>
+<p>Once you have an account registered, select Cloud Compute -&gt; Regular Performance -&gt; 25GB SSD. Choose a location closest to you, and give the server a hostname. An SSH key pair can be <a href="https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent">generated and added</a> from my Mac:</p>
+<ul>
+<li>Generate with <code>ssh-keygen -t ed25519 -C &quot;email@example.com&quot;</code>, and</li>
+<li>add to ssh-agent with <code>ssh-add -K ~/.ssh/&lt;name_of_private_key_file&gt;</code>.</li>
+</ul>
+<p>Also make sure to disable IPv6 and Auto Backups to avoid additional charges of $1/month.</p>
+<p>Vultr&rsquo;s Ubuntu instances are initially firewalled with <code>ufw</code> &ndash; the Ubuntu OS firewall. Initially only port 22 are allowed:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-console" data-lang="console"><span style="display:flex;"><span>root@server:~# ufw status
+</span></span><span style="display:flex;"><span>Status: active
+</span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span>To                         Action      From
+</span></span><span style="display:flex;"><span>--                         ------      ----
+</span></span><span style="display:flex;"><span>22                         ALLOW       Anywhere                  
+</span></span><span style="display:flex;"><span>22 (v6)                    ALLOW       Anywhere (v6) 
+</span></span></code></pre></div><p>To enable port 80 and 443 for ingress connections, <code>ufw allow 80/tcp</code> and <code>ufw allow 43/tcp</code>, then reload with <code>ufw reload</code>.</p>
+<h4 id="setting-up-dns-for-the-subdomain">Setting Up DNS for the Subdomain</h4>
+<p>It&rsquo;s good to start setting up the DNS now, since the records usually take a while to propagate because of delays with your DNS server, TTL, caches everywhere etc.</p>
+<p>I&rsquo;m trying to set up my Akkoma instance on a subdomain <code>fedi.&lt;domain&gt;.com</code>, where <code>&lt;domain&gt;.com</code> already hosts my blog on Gitlab Pages. So the subdomain <code>fedi.&lt;domain&gt;.com</code> should point to my server. <a href="https://www.vultr.com/docs/introduction-to-vultr-dns">Vultr&rsquo;s official DNS doc</a> isn&rsquo;t helpful on the subdomain issue, in that it directs you to use its own nameservers regardless of alternatives (OCI also has DNS servers available) &ndash; but in my case, I&rsquo;m already using DNS at my domain registar for <code>&lt;domain&gt;.com</code>. So I end up directly going to my domain registar, and adding my <code>A</code> record for <code>Hostname:akkoma, Type:A, value:&lt;my_instance_ip&gt;</code>. This is it!</p>
+<p>Like all DNS configurations, this takes a while to take effect. After a couple of hours, I&rsquo;m able to verify with <code>nslookup fedi.&lt;domain&gt;.com</code>, which returns my instance&rsquo;s IP.</p>
+<h1 id="installing-akkoma-from-source">Installing Akkoma (From Source)</h1>
+<p>On the OCI instance, I was following <a href="https://docs.akkoma.dev/stable/installation/otp_en/">the OTP guide</a> until the config generation step gave me:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-console" data-lang="console"><span style="display:flex;"><span>$ su akkoma -s $SHELL -lc <span style="color:#e6db74">&#34;./bin/pleroma_ctl instance gen --output /etc/akkoma/config.exs --output-psql /tmp/setup_db.psql&#34;</span>
+</span></span><span style="display:flex;"><span>/opt/akkoma/releases/3.5.0-0-gd9508474b/../../erts-13.1.2/bin/erl: 12: exec: /opt/akkoma/erts-13.1.2/bin/erlexec: Exec format error
+</span></span></code></pre></div><p>This is when I realized <a href="https://akkoma.dev/AkkomaGang/akkoma/issues/424">Akkoma doesn&rsquo;t support ARM builds yet at the time of writing</a> &ndash; but unfortunately I&rsquo;m on an ARM-based machine:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-console" data-lang="console"><span style="display:flex;"><span>$ uname -m
+</span></span><span style="display:flex;"><span>aarch64
+</span></span></code></pre></div><p>This means I&rsquo;ll have to install from source! All of the following commands are derived from the official Akkoma documentation, on installing from source, for <a href="https://docs.akkoma.dev/stable/installation/arch_linux_en/">Arch Linux</a>, and <a href="https://docs.akkoma.dev/stable/installation/alpine_linux_en">Alphine Linux</a>, adapted for Ubuntu.</p>
+<h4 id="installing-dependencies">Installing Dependencies</h4>
+<ol>
+<li>Switch to the root user:
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-console" data-lang="console"><span style="display:flex;"><span>sudo su - root
+</span></span></code></pre></div></li>
+<li>Install the required deps:
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-console" data-lang="console"><span style="display:flex;"><span>apt install postgresql elixir git cmake file build-essential erlang
+</span></span></code></pre></div></li>
+<li>Install the optional deps:
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-console" data-lang="console"><span style="display:flex;"><span>apt install imagemagick ffmpeg libimage-exiftool-perl
+</span></span></code></pre></div></li>
+<li>Start the Postgres service:
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-console" data-lang="console"><span style="display:flex;"><span>systemctl start postgresql.service
+</span></span></code></pre></div></li>
+</ol>
+<h4 id="the-akkoma-backend">The Akkoma Backend</h4>
+<ol>
+<li>Create the akkoma user if not already (<code>less /etc/passwd</code> to check):
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-console" data-lang="console"><span style="display:flex;"><span>adduser --system --shell  /bin/false --home /opt/akkoma akkoma
+</span></span></code></pre></div>I took this from the OTP install guide, so that the home directory is <code>/opt/akkoma</code> instead.</li>
+<li>Make the akkoma user the owner of <code>/opt/akkoma</code>, and clone the stable branch of akkoma code into it:
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-console" data-lang="console"><span style="display:flex;"><span>mkdir -p /opt/akkoma
+</span></span><span style="display:flex;"><span>chown -R akkoma /opt/akkoma
+</span></span><span style="display:flex;"><span>su akkoma -s $SHELL -lc &#34;git clone https://akkoma.dev/AkkomaGang/akkoma.git -b stable /opt/akkoma&#34;
+</span></span></code></pre></div></li>
+<li>Change into the directory:
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-console" data-lang="console"><span style="display:flex;"><span>cd /opt/akkoma
+</span></span></code></pre></div></li>
+<li>Install akkoma dependencies &ndash; say yes when you&rsquo;re asked to install <code>Hex</code>.
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-console" data-lang="console"><span style="display:flex;"><span>su akkoma -s $SHELL -lc &#34;mix deps.get&#34;
+</span></span></code></pre></div></li>
+<li>Generate configurations in <code>config/generated_config.exs</code>:
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-console" data-lang="console"><span style="display:flex;"><span>su akkoma -s $SHELL -lc &#34;MIX_ENV=prod mix pleroma.instance gen&#34;
+</span></span></code></pre></div><ul>
+<li>As the offical doc explains, this step also compiles parts of akkoma, so it could take a bit while.</li>
+<li>Say yes when you&rsquo;re asked to install <code>rebar3</code>.</li>
+<li>It also interactively asks a few questions. Pay extra attention to the domain that the instance uses since it&rsquo;s bad to change it later. Also I said no to storing the configuration in the database &ndash; I&rsquo;ll enable it later. (Well, almost all the options can be changed later.) Additionally I used the OTP locations for uploads (<code>/var/lib/akkoma/uploads</code>) and static (<code>/var/lib/akkoma/static</code>) instead of the default.</li>
+</ul>
+</li>
+<li>Rename the config file to <code>/opt/akkoma/config/prod.secret.exs</code>:
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-console" data-lang="console"><span style="display:flex;"><span>su akkoma -s $SHELL -lc &#34;mv config/{generated_config.exs,prod.secret.exs}&#34;
+</span></span></code></pre></div></li>
+<li>Create the database:
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-console" data-lang="console"><span style="display:flex;"><span>su postgres -s $SHELL -lc &#34;psql -f /opt/akkoma/config/setup_db.psql&#34;
+</span></span></code></pre></div></li>
+<li>Run the db migration &ndash; this compiles more files so again it takes a while.
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-console" data-lang="console"><span style="display:flex;"><span>su akkoma -s $SHELL -lc &#34;MIX_ENV=prod mix ecto.migrate&#34;
+</span></span></code></pre></div></li>
+<li>Finally start the Akkoma backend:
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-console" data-lang="console"><span style="display:flex;"><span>su akkoma -s $SHELL -lc &#34;MIX_ENV=prod mix phx.server&#34;
+</span></span></code></pre></div>From another terminal (ssh&rsquo;ed into my server) I&rsquo;m able to <code>curl http://localhost:4000/api/v1/instance</code>, and get back some json. Sweet!</li>
+</ol>
+<h4 id="a-quick-summary-of-where-things-are-so-far">A Quick Summary of Where Things Are So Far</h4>
+<ul>
+<li>The config: <code>/opt/akkoma/config/prod.secret.exs</code></li>
+<li>The code: <code>/opt/akkoma</code> &ndash; this is also system user <code>akkoma</code>&rsquo;s home directory</li>
+<li>The uploads directory: <code>/var/lib/akkoma/uploads</code></li>
+<li>The static directory (custom emojis, frontend bundle overrides, robots.txt, etc.): <code>/var/lib/akkoma/static</code></li>
+</ul>
+<p>Moving on&hellip;</p>
+<h4 id="reverse-proxy-and-tls-handling">Reverse Proxy and TLS Handling</h4>
+<p>Any reverse proxy will do (the repo actually has a few other options in <code>/opt/akkoma/installation</code>), but I&rsquo;ll stick with nginx for now 😃</p>
+<ol>
+<li>
+<p>Stop nginx ot free up port 80:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-console" data-lang="console"><span style="display:flex;"><span>systemctl stop nginx
+</span></span></code></pre></div><p>And verify port 80 is clear with <code>netstat -ltpn</code>.</p>
+</li>
+<li>
+<p>Get a Let&rsquo;s Encrypt certificate:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-console" data-lang="console"><span style="display:flex;"><span>certbot certonly --standalone --preferred-challenges http -d fedi.&lt;domain&gt;.com
+</span></span></code></pre></div><p>On the OCI ARM instance, this step the command initially failed for me on connection problems:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-console" data-lang="console"><span style="display:flex;"><span>Certbot failed to authenticate some domains (authenticator: standalone). The Certificate Authority reported these problems:
+</span></span><span style="display:flex;"><span>Domain: fedi.&lt;domain&gt;.com
+</span></span><span style="display:flex;"><span>Type:   connection
+</span></span><span style="display:flex;"><span>Detail: &lt;ip&gt;: Fetching http://fedi.&lt;domain&gt;.com/.well-known/acme-challenge/9JJYxsrHYt-aD86w9Mlp0k4JZajbEGlL1eSSXHkG7c8: Timeout during connect (likely firewall problem)
+</span></span></code></pre></div><p>An nmap scan (<code>nmap -Pn -p 22,80,443 --reason &lt;ip&gt;</code> from outside the server) also shows ports 80 and 443 as &ldquo;filtered&rdquo;:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-console" data-lang="console"><span style="display:flex;"><span>PORT     STATE    SERVICE        REASON
+</span></span><span style="display:flex;"><span>22/tcp   open     ssh            syn-ack
+</span></span><span style="display:flex;"><span>80/tcp   filtered http           no-response
+</span></span><span style="display:flex;"><span>443/tcp  filtered https          no-response
+</span></span></code></pre></div><p>&ldquo;Filtered&rdquo; just means there&rsquo;s a firewall blocking the port. Turns out two firewalls are blocking the connection &ndash; the host firewall and OCI&rsquo;s Virtual Cloud Networks setup.</p>
+<ul>
+<li>I follow <a href="https://blogs.oracle.com/developers/post/enabling-network-traffic-to-ubuntu-images-in-oracle-cloud-infrastructure">this article</a> to enable 80 and 443 for the host firewall &ndash; essentially manipulate the iptable rules directly.</li>
+<li>On how to add the ingress rule to the VCN that my instance belongs to, credit to <a href="https://medium.com/@fathi.ria/oracle-database-cloud-open-ports-on-oci-1af24f4eb9f2">this article</a>.</li>
+</ul>
+<p>After the two steps, rerunning this command succeeds for me.</p>
+<p>I also notice this line from stdout when I request the certificate:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-console" data-lang="console"><span style="display:flex;"><span>This certificate expires on 2023-xx-xx.
+</span></span><span style="display:flex;"><span>These files will be updated when the certificate renews.
+</span></span><span style="display:flex;"><span>Certbot has set up a scheduled task to automatically renew this certificate in the background.
+</span></span></code></pre></div><p>So <a href="https://community.letsencrypt.org/t/what-does-this-mean-exactly-certbot-has-set-up-a-scheduled-task-to-automatically-renew-this-certificate-in-the-background/174615">it did</a>, which means I don&rsquo;t have to manually set up auto-renew. Neat!</p>
+</li>
+<li>
+<p>Copying the nginx config and enabling it:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-console" data-lang="console"><span style="display:flex;"><span>cp /opt/akkoma/installation/nginx/akkoma.nginx /etc/nginx/sites-available/akkoma.conf
+</span></span><span style="display:flex;"><span>ln -s /etc/nginx/sites-available/akkoma.conf /etc/nginx/sites-enabled/akkoma.conf
+</span></span></code></pre></div></li>
+<li>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-console" data-lang="console"><span style="display:flex;"><span>nano /etc/nginx/sites-available/akkoma.conf
+</span></span></code></pre></div><p>And replace all occurrences of <code>example.tld</code> to <code>fedi.&lt;domain&gt;.com</code>.</p>
+</li>
+<li>
+<p>Verify the config with</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-console" data-lang="console"><span style="display:flex;"><span>nginx -t
+</span></span></code></pre></div></li>
+<li>
+<p>Start nginx service, and optionally Akkoma backend in the foreground with</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-console" data-lang="console"><span style="display:flex;"><span>systemctl start nginx
+</span></span><span style="display:flex;"><span>su akkoma -s $SHELL -lc &#34;MIX_ENV=prod mix phx.server&#34;
+</span></span></code></pre></div><p>Pointing my browser at <code>https://fedi.&lt;domain&gt;.com</code>, I get:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-console" data-lang="console"><span style="display:flex;"><span>Welcome to Akkoma!
+</span></span><span style="display:flex;"><span>If you&#39;re seeing this page, your server works!
+</span></span><span style="display:flex;"><span>...
+</span></span></code></pre></div><p>with some more instructions and links to install a frontend. Yay!</p>
+</li>
+<li>
+<p>Now to set up the Akkoma backend as a system service. Looking at the the service config file, the only thing I need to modify this the akkoma user&rsquo;s home directory. So</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-console" data-lang="console"><span style="display:flex;"><span>nano /opt/akkoma/installation/akkoma.service
+</span></span></code></pre></div><p>and change this line <code>Environment=&quot;HOME=/var/lib/akkoma&quot;</code> to:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-console" data-lang="console"><span style="display:flex;"><span>Environment=&#34;HOME=/opt/akkoma&#34;
+</span></span></code></pre></div></li>
+<li>
+<p>Copy the service config file, start it and enable it on boot:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-console" data-lang="console"><span style="display:flex;"><span>cp /opt/akkoma/installation/akkoma.service /etc/systemd/system/akkoma.service
+</span></span><span style="display:flex;"><span>systemctl start akkoma
+</span></span><span style="display:flex;"><span>systemctl enable akkoma
+</span></span><span style="display:flex;"><span>systemctl restart nginx
+</span></span></code></pre></div><p>Pointing the browser to <code>https://fedi.&lt;domain&gt;.com</code> again, I get the same instructions to install a frontend.</p>
+</li>
+</ol>
+<h4 id="optional-setting-up-custom-domain-identifiers">(Optional) Setting Up Custom Domain Identifiers</h4>
+<p>If you&rsquo;re using a custom (sub)domain and want the usernames to be identified differently from the instance (sub)domain, this is when you want to set up two things:</p>
+<ul>
+<li>the Akkoma config (<a href="https://docs.akkoma.dev/stable/configuration/how_to_serve_another_domain_for_webfinger/">reference</a>), and</li>
+<li>the redirects for WebFinger related endpoints (<a href="https://aeracode.org/2022/11/01/fediverse-custom-domains/">reference</a>).</li>
+</ul>
+<p>Make sure to get it right <strong>now</strong> before your instance starts federating!</p>
+<h4 id="installing-a-frontend">Installing A Frontend</h4>
+<ol>
+<li>From what I heard, <code>pleroma-fe</code> is a light-weight minimalist frontend. I&rsquo;ll use it to play around for now:
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-console" data-lang="console"><span style="display:flex;"><span>cd /opt/akkoma
+</span></span><span style="display:flex;"><span>su akkoma -s $SHELL -lc &#34;MIX_ENV=prod mix pleroma.frontend install pleroma-fe --ref stable&#34;
+</span></span></code></pre></div>Says it&rsquo;s installed to <code>/var/lib/akkoma/static/frontends/pleroma-fe/stable</code>.</li>
+<li>And now install <code>admin-fe</code>:
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-console" data-lang="console"><span style="display:flex;"><span>su akkoma -s $SHELL -lc &#34;MIX_ENV=prod mix pleroma.frontend install admin-fe --ref stable&#34;
+</span></span></code></pre></div></li>
+<li>Since we now have a frontend to do administration with, let&rsquo;s not forget to <a href="https://docs.akkoma.dev/stable/configuration/howto_database_config/">activate in-database configuration</a> &ndash; I initially opted out during the config generation step.
+<ul>
+<li>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-console" data-lang="console"><span style="display:flex;"><span>nano config/prod.secret.exs
+</span></span></code></pre></div>And set <code>config :pleroma, configurable_from_database: true</code> (it&rsquo;s one of the last lines on the very bottom).</li>
+<li>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-console" data-lang="console"><span style="display:flex;"><span>su akkoma -s $SHELL -lc &#34;MIX_ENV=prod mix pleroma.config migrate_to_db&#34;
+</span></span></code></pre></div>This also triggers some compiling.</li>
+<li>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-console" data-lang="console"><span style="display:flex;"><span>systemctl restart akkoma
+</span></span></code></pre></div>so that the change takes effect.</li>
+</ul>
+</li>
+</ol>
+<h4 id="creating-the-admin-user">Creating the admin user</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-console" data-lang="console"><span style="display:flex;"><span>su akkoma -s $SHELL -lc &#34;MIX_ENV=prod mix pleroma.user new &lt;username&gt; &lt;your@emailaddress&gt; --admin&#34;
+</span></span></code></pre></div><p>The command prints a URL to reset the password &ndash; copy and pasting it to the browser, and logging in &ndash; it works! Finally time to play around with some fun customizations 🎉.</p>
+<h1 id="quick-validations">Quick Validations</h1>
+<ul>
+<li>Federation: I have another account on a Mastodon instance, and I try to have the two accounts follow each other and send direct messages &ndash; to see if they get each other semi-instantly. During my first attempt at the custom subdomain setup, I was able to uncover the federation issue this way.</li>
+<li>I notice that for the remote accounts I follow, my instance initially pulls posts from back a few months or even a year ago &ndash; but as my followees generate new contents, the new posts are up to date.</li>
+</ul>
+
+  <hr>
+<div class="footer">
+    
+    
+    
+    <p>
+    This is a post in the <b><a href="https://mikihau.github.io/series/akkoma">Akkoma</a></b> series.
+        <br>Other posts in this series:
+        <ul class="series">
+            
+            
+            
+            <li>
+                May 15, 2023 -
+                
+                    <a href="/posts/operating-akkoma/">Operating Akkoma</a>
+                
+            </li>
+            
+            <li>
+                January 15, 2023 -
+                
+                    Installing an Akkoma Instance
+                
+            </li>
+            
+        </ul>
+    </p>
+    
+</div>
+
+</div>
+            </main>
+            
+  <div class="article-toc " >
+    <div class="toc-wrapper">
+      <h4>Contents</h4>
+      <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+    </div>
+</div>
+
+
+        </div>
+    </body>
+</html>

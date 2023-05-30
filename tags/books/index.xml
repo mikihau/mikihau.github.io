@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>books on Miki&#39;s Blog</title>
+    <link>https://mikihau.github.io/tags/books/</link>
+    <description>Recent content in books on Miki&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Mon, 29 Apr 2019 22:15:09 -0800</lastBuildDate><atom:link href="https://mikihau.github.io/tags/books/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Book Review: The Manager&#39;s Path</title>
+      <link>https://mikihau.github.io/posts/book-review-the-managers-path/</link>
+      <pubDate>Mon, 29 Apr 2019 22:15:09 -0800</pubDate>
+      
+      <guid>https://mikihau.github.io/posts/book-review-the-managers-path/</guid>
+      <description>My Expectations I decided to pick up this book for a couple of reasons. I&amp;rsquo;ve always been looking for a description of what a manager does, or should do, at tech companies. I&amp;rsquo;ve personally worked with a couple of managers so far, and each of them manage with distinctive styles, that I find myself agree/disagree with. I&amp;rsquo;d like to have a set of basic expectations for managers, and learn to understand things from the management&amp;rsquo;s side.</description>
+    </item>
+    
+  </channel>
+</rss>

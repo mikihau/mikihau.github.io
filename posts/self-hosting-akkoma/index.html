@@ -475,7 +475,7 @@ powered by <a target="_blank" href="https://gohugo.io">Hugo</a> | themed with <a
 
   <p>I&rsquo;ve decided to self-host my own <a href="https://docs.akkoma.dev/stable/">Akkoma</a> (a hard fork of <a href="https://pleroma.social/">Pleroma</a>) instance, after actively and happily using Mastodon for 2.5 years. Inspired by <a href="https://the.teabag.ninja/posts/2022/11/installing-akkoma-on-your-host/">The Teabag Ninja&rsquo;s awesome and detailed writeup on Akkoma&rsquo;s OTP install</a>, I&rsquo;m also sharing my source installation notes along the way for all the folks on the internet, including my future self &ndash; since I did have a few surprises during the process.</p>
 <p>Unless otherwise noted, all commands below are tested on an ARM-based machine with Ubuntu 22.04, for an Akkoma install from source.</p>
-<h1 id="a-word-of-warning-hosting-the-instance-on-a-subdomain-with-a-different-account-identifier">A Word of Warning: Hosting the Instance on a (Sub)domain With a Different Account Identifier</h1>
+<h2 id="a-word-of-warning-hosting-the-instance-on-a-subdomain-with-a-different-account-identifier">A Word of Warning: Hosting the Instance on a (Sub)domain With a Different Account Identifier</h2>
 <p>I&rsquo;m putting this down first, because this burnt me so bad, that I had to tear down the entire installation, and re-install the instance under a different subdomain. Read this if you&rsquo;re like me, who:</p>
 <ul>
 <li>already hosts content on <code>domain.com</code>,</li>
@@ -493,12 +493,12 @@ powered by <a target="_blank" href="https://gohugo.io">Hugo</a> | themed with <a
 <li>Just settle for identifiers with the subdomain like <code>@user@subdomain.domain.com</code>. (I eventually went for this this option.)</li>
 </ul>
 <p>Just so that you mess things up and have to start from scratch like I did, <a href="https://johnmee.com/how-to-reinstall-postgresql-on-ubuntu">here</a>&rsquo;s how you uninstall and reinstall Postgres on Ubuntu 🥲.</p>
-<h1 id="setting-up-a-host-server">Setting Up a Host Server</h1>
-<h4 id="with-oracle-cloud-infrastructure">With Oracle Cloud Infrastructure</h4>
+<h2 id="setting-up-a-host-server">Setting Up a Host Server</h2>
+<h3 id="with-oracle-cloud-infrastructure">With Oracle Cloud Infrastructure</h3>
 <p>My final setup is on an ARM-based OCI instance on their generous <a href="https://www.oracle.com/cloud/free/">free tier offering</a>, with the acknowledgement/expectation that this free tier may change in the future. To setup an account and create an instance, I follow <a href="https://www.seenlyst.com/blog/oracle-cloud-free-vps-out-of-capacity/">this tutorial</a> &ndash; admittedly including the script that, once in a while, checks if an instance is available in my home region. I&rsquo;m lucky to have an instance created in about a week for my region.</p>
 <p>Once the instance is created and a public IP address attached, I have no issues logging in with the ssh key. The default user is <code>ubuntu</code>, but running <code>sudo &lt;command&gt;</code> or switching to root (<code>sudo su - root</code>) does not require a password &ndash; this is important because the super user permission is required to install Akkoma on the server.</p>
 <p>OCI&rsquo;s Ubuntu instances are firewall protected by both the OS&rsquo;s iptables, and the VCN attached to the instance (we&rsquo;ll see later), so don&rsquo;t be surprised if a fresh instance doesn&rsquo;t allow most ingress TCP connections.</p>
-<h4 id="with-vultr">With Vultr</h4>
+<h3 id="with-vultr">With Vultr</h3>
 <p>I also get an instance with <a href="https://vultr.com">Vultr</a> &ndash; they run year-round promos, allowing you to try out their instances for free for some initial periods of time. Akkoma&rsquo;s resource consumption is minimal, so a humble $5/month instance with 1 vCPU, 1GB memory, and 1T bandwidth should be able to handle myself as the sole user of the app.</p>
 <p>Once you have an account registered, select Cloud Compute -&gt; Regular Performance -&gt; 25GB SSD. Choose a location closest to you, and give the server a hostname. An SSH key pair can be <a href="https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent">generated and added</a> from my Mac:</p>
 <ul>
@@ -515,11 +515,11 @@ powered by <a target="_blank" href="https://gohugo.io">Hugo</a> | themed with <a
 </span></span><span style="display:flex;"><span>22                         ALLOW       Anywhere                  
 </span></span><span style="display:flex;"><span>22 (v6)                    ALLOW       Anywhere (v6) 
 </span></span></code></pre></div><p>To enable port 80 and 443 for ingress connections, <code>ufw allow 80/tcp</code> and <code>ufw allow 43/tcp</code>, then reload with <code>ufw reload</code>.</p>
-<h4 id="setting-up-dns-for-the-subdomain">Setting Up DNS for the Subdomain</h4>
+<h3 id="setting-up-dns-for-the-subdomain">Setting Up DNS for the Subdomain</h3>
 <p>It&rsquo;s good to start setting up the DNS now, since the records usually take a while to propagate because of delays with your DNS server, TTL, caches everywhere etc.</p>
 <p>I&rsquo;m trying to set up my Akkoma instance on a subdomain <code>fedi.&lt;domain&gt;.com</code>, where <code>&lt;domain&gt;.com</code> already hosts my blog on Gitlab Pages. So the subdomain <code>fedi.&lt;domain&gt;.com</code> should point to my server. <a href="https://www.vultr.com/docs/introduction-to-vultr-dns">Vultr&rsquo;s official DNS doc</a> isn&rsquo;t helpful on the subdomain issue, in that it directs you to use its own nameservers regardless of alternatives (OCI also has DNS servers available) &ndash; but in my case, I&rsquo;m already using DNS at my domain registar for <code>&lt;domain&gt;.com</code>. So I end up directly going to my domain registar, and adding my <code>A</code> record for <code>Hostname:akkoma, Type:A, value:&lt;my_instance_ip&gt;</code>. This is it!</p>
 <p>Like all DNS configurations, this takes a while to take effect. After a couple of hours, I&rsquo;m able to verify with <code>nslookup fedi.&lt;domain&gt;.com</code>, which returns my instance&rsquo;s IP.</p>
-<h1 id="installing-akkoma-from-source">Installing Akkoma (From Source)</h1>
+<h2 id="installing-akkoma-from-source">Installing Akkoma (From Source)</h2>
 <p>On the OCI instance, I was following <a href="https://docs.akkoma.dev/stable/installation/otp_en/">the OTP guide</a> until the config generation step gave me:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-console" data-lang="console"><span style="display:flex;"><span>$ su akkoma -s $SHELL -lc <span style="color:#e6db74">&#34;./bin/pleroma_ctl instance gen --output /etc/akkoma/config.exs --output-psql /tmp/setup_db.psql&#34;</span>
 </span></span><span style="display:flex;"><span>/opt/akkoma/releases/3.5.0-0-gd9508474b/../../erts-13.1.2/bin/erl: 12: exec: /opt/akkoma/erts-13.1.2/bin/erlexec: Exec format error
@@ -527,7 +527,7 @@ powered by <a target="_blank" href="https://gohugo.io">Hugo</a> | themed with <a
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-console" data-lang="console"><span style="display:flex;"><span>$ uname -m
 </span></span><span style="display:flex;"><span>aarch64
 </span></span></code></pre></div><p>This means I&rsquo;ll have to install from source! All of the following commands are derived from the official Akkoma documentation, on installing from source, for <a href="https://docs.akkoma.dev/stable/installation/arch_linux_en/">Arch Linux</a>, and <a href="https://docs.akkoma.dev/stable/installation/alpine_linux_en">Alphine Linux</a>, adapted for Ubuntu.</p>
-<h4 id="installing-dependencies">Installing Dependencies</h4>
+<h3 id="installing-dependencies">Installing Dependencies</h3>
 <ol>
 <li>Switch to the root user:
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-console" data-lang="console"><span style="display:flex;"><span>sudo su - root
@@ -542,7 +542,7 @@ powered by <a target="_blank" href="https://gohugo.io">Hugo</a> | themed with <a
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-console" data-lang="console"><span style="display:flex;"><span>systemctl start postgresql.service
 </span></span></code></pre></div></li>
 </ol>
-<h4 id="the-akkoma-backend">The Akkoma Backend</h4>
+<h3 id="the-akkoma-backend">The Akkoma Backend</h3>
 <ol>
 <li>Create the akkoma user if not already (<code>less /etc/passwd</code> to check):
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-console" data-lang="console"><span style="display:flex;"><span>adduser --system --shell  /bin/false --home /opt/akkoma akkoma
@@ -579,7 +579,7 @@ powered by <a target="_blank" href="https://gohugo.io">Hugo</a> | themed with <a
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-console" data-lang="console"><span style="display:flex;"><span>su akkoma -s $SHELL -lc &#34;MIX_ENV=prod mix phx.server&#34;
 </span></span></code></pre></div>From another terminal (ssh&rsquo;ed into my server) I&rsquo;m able to <code>curl http://localhost:4000/api/v1/instance</code>, and get back some json. Sweet!</li>
 </ol>
-<h4 id="a-quick-summary-of-where-things-are-so-far">A Quick Summary of Where Things Are So Far</h4>
+<h3 id="a-quick-summary-of-where-things-are-so-far">A Quick Summary of Where Things Are So Far</h3>
 <ul>
 <li>The config: <code>/opt/akkoma/config/prod.secret.exs</code></li>
 <li>The code: <code>/opt/akkoma</code> &ndash; this is also system user <code>akkoma</code>&rsquo;s home directory</li>
@@ -587,7 +587,7 @@ powered by <a target="_blank" href="https://gohugo.io">Hugo</a> | themed with <a
 <li>The static directory (custom emojis, frontend bundle overrides, robots.txt, etc.): <code>/var/lib/akkoma/static</code></li>
 </ul>
 <p>Moving on&hellip;</p>
-<h4 id="reverse-proxy-and-tls-handling">Reverse Proxy and TLS Handling</h4>
+<h3 id="reverse-proxy-and-tls-handling">Reverse Proxy and TLS Handling</h3>
 <p>Any reverse proxy will do (the repo actually has a few other options in <code>/opt/akkoma/installation</code>), but I&rsquo;ll stick with nginx for now 😃</p>
 <ol>
 <li>
@@ -658,14 +658,14 @@ powered by <a target="_blank" href="https://gohugo.io">Hugo</a> | themed with <a
 </span></span></code></pre></div><p>Pointing the browser to <code>https://fedi.&lt;domain&gt;.com</code> again, I get the same instructions to install a frontend.</p>
 </li>
 </ol>
-<h4 id="optional-setting-up-custom-domain-identifiers">(Optional) Setting Up Custom Domain Identifiers</h4>
+<h3 id="optional-setting-up-custom-domain-identifiers">(Optional) Setting Up Custom Domain Identifiers</h3>
 <p>If you&rsquo;re using a custom (sub)domain and want the usernames to be identified differently from the instance (sub)domain, this is when you want to set up two things:</p>
 <ul>
 <li>the Akkoma config (<a href="https://docs.akkoma.dev/stable/configuration/how_to_serve_another_domain_for_webfinger/">reference</a>), and</li>
 <li>the redirects for WebFinger related endpoints (<a href="https://aeracode.org/2022/11/01/fediverse-custom-domains/">reference</a>).</li>
 </ul>
 <p>Make sure to get it right <strong>now</strong> before your instance starts federating!</p>
-<h4 id="installing-a-frontend">Installing A Frontend</h4>
+<h3 id="installing-a-frontend">Installing A Frontend</h3>
 <ol>
 <li>From what I heard, <code>pleroma-fe</code> is a light-weight minimalist frontend. I&rsquo;ll use it to play around for now:
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-console" data-lang="console"><span style="display:flex;"><span>cd /opt/akkoma
@@ -688,10 +688,10 @@ powered by <a target="_blank" href="https://gohugo.io">Hugo</a> | themed with <a
 </ul>
 </li>
 </ol>
-<h4 id="creating-the-admin-user">Creating the admin user</h4>
+<h3 id="creating-the-admin-user">Creating the admin user</h3>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-console" data-lang="console"><span style="display:flex;"><span>su akkoma -s $SHELL -lc &#34;MIX_ENV=prod mix pleroma.user new &lt;username&gt; &lt;your@emailaddress&gt; --admin&#34;
 </span></span></code></pre></div><p>The command prints a URL to reset the password &ndash; copy and pasting it to the browser, and logging in &ndash; it works! Finally time to play around with some fun customizations 🎉.</p>
-<h1 id="quick-validations">Quick Validations</h1>
+<h2 id="quick-validations">Quick Validations</h2>
 <ul>
 <li>Federation: I have another account on a Mastodon instance, and I try to have the two accounts follow each other and send direct messages &ndash; to see if they get each other semi-instantly. During my first attempt at the custom subdomain setup, I was able to uncover the federation issue this way.</li>
 <li>I notice that for the remote accounts I follow, my instance initially pulls posts from back a few months or even a year ago &ndash; but as my followees generate new contents, the new posts are up to date.</li>
@@ -736,19 +736,26 @@ powered by <a target="_blank" href="https://gohugo.io">Hugo</a> | themed with <a
       <h4>Contents</h4>
       <nav id="TableOfContents">
   <ul>
-    <li>
+    <li><a href="#a-word-of-warning-hosting-the-instance-on-a-subdomain-with-a-different-account-identifier">A Word of Warning: Hosting the Instance on a (Sub)domain With a Different Account Identifier</a></li>
+    <li><a href="#setting-up-a-host-server">Setting Up a Host Server</a>
       <ul>
-        <li></li>
+        <li><a href="#with-oracle-cloud-infrastructure">With Oracle Cloud Infrastructure</a></li>
+        <li><a href="#with-vultr">With Vultr</a></li>
+        <li><a href="#setting-up-dns-for-the-subdomain">Setting Up DNS for the Subdomain</a></li>
       </ul>
     </li>
-  </ul>
-
-  <ul>
-    <li>
+    <li><a href="#installing-akkoma-from-source">Installing Akkoma (From Source)</a>
       <ul>
-        <li></li>
+        <li><a href="#installing-dependencies">Installing Dependencies</a></li>
+        <li><a href="#the-akkoma-backend">The Akkoma Backend</a></li>
+        <li><a href="#a-quick-summary-of-where-things-are-so-far">A Quick Summary of Where Things Are So Far</a></li>
+        <li><a href="#reverse-proxy-and-tls-handling">Reverse Proxy and TLS Handling</a></li>
+        <li><a href="#optional-setting-up-custom-domain-identifiers">(Optional) Setting Up Custom Domain Identifiers</a></li>
+        <li><a href="#installing-a-frontend">Installing A Frontend</a></li>
+        <li><a href="#creating-the-admin-user">Creating the admin user</a></li>
       </ul>
     </li>
+    <li><a href="#quick-validations">Quick Validations</a></li>
   </ul>
 </nav>
     </div>

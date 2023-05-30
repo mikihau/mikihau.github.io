@@ -478,7 +478,7 @@ powered by <a target="_blank" href="https://gohugo.io">Hugo</a> | themed with <a
 </div>
 
   <p>A couple of months into <a href="https://mikihau.github.io/posts/self-hosting-akkoma/">self-hosting my Akkoma instance</a>, I find myself doing a couple of operational tasks at a recurring basis. So might as well write them down here for future reference. Again, this is on my ARM-based machine with Ubuntu 22.04, where Akkoma is installed from source.</p>
-<h1 id="backing-up-periodically">Backing Up (Periodically)</h1>
+<h2 id="backing-up-periodically">Backing Up (Periodically)</h2>
 <p>The <a href="https://docs.akkoma.dev/stable/administration/backup/">doc&rsquo;s backup instructions</a> essentially says we should back up the database, plus a couple of configs and static files/directories.</p>
 <p>So first off, ensure we have a place to put the backup files by creating this backup directory:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-console" data-lang="console"><span style="display:flex;"><span>sudo su - root
@@ -545,7 +545,7 @@ powered by <a target="_blank" href="https://gohugo.io">Hugo</a> | themed with <a
 </span></span><span style="display:flex;"><span>systemctl status akkoma-backup.service
 </span></span></code></pre></div>If the timer file ever gets changed after it starts, do a <code>systemctl daemon-reload</code> to reapply the change.</li>
 </ol>
-<h1 id="renewing-that-tls-certificate">Renewing That TLS Certificate</h1>
+<h2 id="renewing-that-tls-certificate">Renewing That TLS Certificate</h2>
 <p>I thought my TLS certificate was going to be renewed automatically, but at one point near my cert expiration, I started getting emails prompting me to renew my cert. Turns out (with <code>systemctl status certbot.service</code>) the renewal has been consistently failing because the script needs port 80, which conflicts with nginx, who also uses port 80. So to manually renew the cert, just do:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-console" data-lang="console"><span style="display:flex;"><span>systemctl stop nginx # free up port 80
 </span></span><span style="display:flex;"><span>/usr/bin/certbot renew
@@ -554,7 +554,7 @@ powered by <a target="_blank" href="https://gohugo.io">Hugo</a> | themed with <a
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-console" data-lang="console"><span style="display:flex;"><span>ExecStartPre=systemctl stop nginx
 </span></span><span style="display:flex;"><span>ExecStartPost=systemctl start nginx
 </span></span></code></pre></div><p>under <code>[Service]</code>. After running <code>systemctl daemon-reload</code>, the service starts to succeed. (This isn&rsquo;t perfect since every time the renewal script runs, we have a tiny bit of downtime. But hey.)</p>
-<h1 id="upgrading-the-akkoma-instance">Upgrading the Akkoma Instance</h1>
+<h2 id="upgrading-the-akkoma-instance">Upgrading the Akkoma Instance</h2>
 <p>Upgrading Akkoma usually doesn&rsquo;t come with a big fanfare &ndash; except that, starting v3.8.0, Akkoma requires an Elixir version 1.14 that&rsquo;s not provided by the <code>apt</code> package manager. This brings me some confusion since I&rsquo;ll have to figure out how to install Elixir 1.14, and ensure the systemd service uses that upgraded Elixir runtime.</p>
 <ol>
 <li>Switch to the <code>akkoma</code> user:
@@ -629,7 +629,7 @@ powered by <a target="_blank" href="https://gohugo.io">Hugo</a> | themed with <a
 </span></span><span style="display:flex;"><span>journalctl -u akkoma.service -f
 </span></span></code></pre></div></li>
 </ol>
-<h1 id="extras-onboarding-another-admin">Extras: Onboarding Another Admin</h1>
+<h2 id="extras-onboarding-another-admin">Extras: Onboarding Another Admin</h2>
 <p>I&rsquo;m really fortunate to have a volunteer sys admin for this Akkoma instance. so I&rsquo;m making sure that they have root access on the server to be able to handle any incidents/issues. Not Akkoma related, just Ubuntu/Linux stuff.</p>
 <ol>
 <li>
@@ -655,7 +655,7 @@ powered by <a target="_blank" href="https://gohugo.io">Hugo</a> | themed with <a
 </span></span></code></pre></div><p>And add this line <code>&lt;username&gt; ALL=(ALL) NOPASSWD:ALL</code> to the bottom of the editor.</p>
 </li>
 </ol>
-<h1 id="monitoring">Monitoring</h1>
+<h2 id="monitoring">Monitoring</h2>
 <p>Looking into monitoring solutions for hobby projects, I bumped into <a href="https://ultramookie.com/2023/03/monitoring-basics/">the Monitoring Basics by Steve Mookie Kong</a>. Really the article is more than I need now, but I like the idea of using third-party hosted services to monitor my instance &ndash; self-hosted monitoring solutions runs the risk of being down themselves. For now I use <a href="https://betterstack.com/better-uptime">Better Uptime</a> for external health pings + uptime dashboard, and <a href="https://www.datadoghq.com/">Datadog</a> for internal metrics.</p>
 
   <hr>
@@ -695,7 +695,15 @@ powered by <a target="_blank" href="https://gohugo.io">Hugo</a> | themed with <a
   <div class="article-toc " >
     <div class="toc-wrapper">
       <h4>Contents</h4>
-      <nav id="TableOfContents"></nav>
+      <nav id="TableOfContents">
+  <ul>
+    <li><a href="#backing-up-periodically">Backing Up (Periodically)</a></li>
+    <li><a href="#renewing-that-tls-certificate">Renewing That TLS Certificate</a></li>
+    <li><a href="#upgrading-the-akkoma-instance">Upgrading the Akkoma Instance</a></li>
+    <li><a href="#extras-onboarding-another-admin">Extras: Onboarding Another Admin</a></li>
+    <li><a href="#monitoring">Monitoring</a></li>
+  </ul>
+</nav>
     </div>
 </div>
 

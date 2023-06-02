@@ -124,7 +124,7 @@
     },
     "datePublished": "2023-05-15",
     "description": "",
-    "wordCount":  1037 ,
+    "wordCount":  1274 ,
     "mainEntityOfPage": "True",
     "dateModified": "2023-05-15",
     "image": {
@@ -488,7 +488,8 @@ powered by <a target="_blank" href="https://gohugo.io">Hugo</a> | themed with <a
 </span></span></code></pre></div><p>Then I whip up a quick script to back up all things mentioned in the doc:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-console" data-lang="console"><span style="display:flex;"><span>#!/usr/bin/env bash
 </span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">
-</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span>echo &#34;Akkoma backup starting&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span>set -e
+</span></span><span style="display:flex;"><span>echo &#34;Akkoma backup starting&#34;
 </span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">
 </span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span>BACKUP_DIR=/mnt/backups/akkoma/$(date -I)
 </span></span><span style="display:flex;"><span>mkdir -p $BACKUP_DIR/config
@@ -545,6 +546,58 @@ powered by <a target="_blank" href="https://gohugo.io">Hugo</a> | themed with <a
 </span></span><span style="display:flex;"><span>systemctl status akkoma-backup.service
 </span></span></code></pre></div>If the timer file ever gets changed after it starts, do a <code>systemctl daemon-reload</code> to reapply the change.</li>
 </ol>
+<h2 id="restoring-from-a-backup">Restoring From A Backup</h2>
+<p>Backups are useless unless I know how to restore them. Here are the steps I took during a fire drill:</p>
+<ol>
+<li>
+<p>Restore static files from the backup:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-console" data-lang="console"><span style="display:flex;"><span>sudo -su akkoma
+</span></span><span style="display:flex;"><span>BACKUP_DIR=/mnt/backups/akkoma/$(ls -rt /mnt/backups/akkoma/ | tail -1)
+</span></span><span style="display:flex;"><span>cp -r $BACKUP_DIR/uploads/. /var/lib/akkoma/uploads
+</span></span><span style="display:flex;"><span>cp -r $BACKUP_DIR/static/. /var/lib/akkoma/static
+</span></span></code></pre></div></li>
+<li>
+<p>Stop the service:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-console" data-lang="console"><span style="display:flex;"><span>exit
+</span></span><span style="display:flex;"><span>sudo -su root
+</span></span><span style="display:flex;"><span>systemctl stop akkoma
+</span></span></code></pre></div></li>
+<li>
+<p>Restore the db from the backup &ndash; this step is pretty dangerous! I haven&rsquo;t found a better way to make sure the pgdump file is valid before erasing the db yet though.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-console" data-lang="console"><span style="display:flex;"><span>BACKUP_DIR=/mnt/backups/akkoma/$(ls -rt /mnt/backups/akkoma/ | tail -1)
+</span></span><span style="display:flex;"><span>cd /opt/akkoma/
+</span></span><span style="display:flex;"><span>cp $BACKUP_DIR/config/setup_db.psql /tmp/setup_db.psql
+</span></span><span style="display:flex;"><span>cp $BACKUP_DIR/akkoma.pgdump /tmp/akkoma.pgdump
+</span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span># check the backup file to ensure it looks ok before dropping the database
+</span></span><span style="display:flex;"><span>head /tmp/akkoma.pgdump
+</span></span><span style="display:flex;"><span>tail /tmp/akkoma.pgdump
+</span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span># restore the db
+</span></span><span style="display:flex;"><span>sudo -Hu postgres psql -c &#39;DROP DATABASE akkoma;&#39;; sudo -Hu postgres psql -c &#39;DROP USER akkoma;&#39;
+</span></span><span style="display:flex;"><span>sudo -Hu postgres psql -f /tmp/setup_db.psql
+</span></span><span style="display:flex;"><span>sudo -Hu postgres pg_restore -d akkoma -v -1 /tmp/akkoma.pgdump
+</span></span></code></pre></div></li>
+<li>
+<p>Do this only if you&rsquo;re upgrading from a previous version &ndash; migrate the db:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-console" data-lang="console"><span style="display:flex;"><span>sudo -su akkoma
+</span></span><span style="display:flex;"><span>MIX_ENV=prod mix ecto.migrate
+</span></span></code></pre></div></li>
+<li>
+<p>Restart the service:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-console" data-lang="console"><span style="display:flex;"><span>exit
+</span></span><span style="display:flex;"><span>systemctl start akkoma
+</span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span># verifications
+</span></span><span style="display:flex;"><span>systemctl status akkoma
+</span></span><span style="display:flex;"><span>journalctl -u akkoma.service -f
+</span></span></code></pre></div></li>
+<li>
+<p>Generate the statistics for postgres to plan queries:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-console" data-lang="console"><span style="display:flex;"><span>sudo -Hu postgres vacuumdb --all --analyze-in-stages
+</span></span></code></pre></div></li>
+</ol>
+<p>For some extra precautions, I also back up the entire VM daily from my VPS provider, so that I can roll back in case I <em>really</em> mess things up.</p>
 <h2 id="renewing-that-tls-certificate">Renewing That TLS Certificate</h2>
 <p>I thought my TLS certificate was going to be renewed automatically, but at one point near my cert expiration, I started getting emails prompting me to renew my cert. Turns out (with <code>systemctl status certbot.service</code>) the renewal has been consistently failing because the script needs port 80, which conflicts with nginx, who also uses port 80. So to manually renew the cert, just do:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-console" data-lang="console"><span style="display:flex;"><span>systemctl stop nginx # free up port 80
@@ -698,6 +751,7 @@ powered by <a target="_blank" href="https://gohugo.io">Hugo</a> | themed with <a
       <nav id="TableOfContents">
   <ul>
     <li><a href="#backing-up-periodically">Backing Up (Periodically)</a></li>
+    <li><a href="#restoring-from-a-backup">Restoring From A Backup</a></li>
     <li><a href="#renewing-that-tls-certificate">Renewing That TLS Certificate</a></li>
     <li><a href="#upgrading-the-akkoma-instance">Upgrading the Akkoma Instance</a></li>
     <li><a href="#extras-onboarding-another-admin">Extras: Onboarding Another Admin</a></li>

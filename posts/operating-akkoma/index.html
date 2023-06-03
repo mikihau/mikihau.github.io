@@ -124,7 +124,7 @@
     },
     "datePublished": "2023-05-15",
     "description": "",
-    "wordCount":  1274 ,
+    "wordCount":  1288 ,
     "mainEntityOfPage": "True",
     "dateModified": "2023-05-15",
     "image": {
@@ -491,10 +491,11 @@ powered by <a target="_blank" href="https://gohugo.io">Hugo</a> | themed with <a
 </span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span>set -e
 </span></span><span style="display:flex;"><span>echo &#34;Akkoma backup starting&#34;
 </span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">
-</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span>BACKUP_DIR=/mnt/backups/akkoma/$(date -I)
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span>BACKUP_DIR_PARENT=/mnt/backups/akkoma
+</span></span><span style="display:flex;"><span>BACKUP_DIR=$BACKUP_DIR_PARENT/$(date -I)
 </span></span><span style="display:flex;"><span>mkdir -p $BACKUP_DIR/config
 </span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">
-</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span>echo &#34;Stopping akkoma instance&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span>echo &#34;Stopping akkoma&#34;
 </span></span><span style="display:flex;"><span>systemctl stop akkoma
 </span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">
 </span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span>echo &#34;Backing up postgres&#34; 
@@ -507,10 +508,12 @@ powered by <a target="_blank" href="https://gohugo.io">Hugo</a> | themed with <a
 </span></span><span style="display:flex;"><span>cp -r /var/lib/akkoma/uploads $BACKUP_DIR
 </span></span><span style="display:flex;"><span>cp -r /var/lib/akkoma/static $BACKUP_DIR
 </span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">
-</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span>echo &#34;Restarting akkoma instance&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span>echo &#34;Restarting akkoma&#34;
 </span></span><span style="display:flex;"><span>systemctl start akkoma
 </span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">
-</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span>echo &#34;Akkoma backup finished at $BACKUP_DIR&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span>echo &#34;Pruning backups older than the last 8&#34;
+</span></span><span style="display:flex;"><span>cd $BACKUP_DIR_PARENT
+</span></span><span style="display:flex;"><span>ls -rt $BACKUP_DIR_PARENT | head -n -8 | xargs rm -r
 </span></span></code></pre></div><p>I put this script at <code>/usr/local/bin/akkomabackup</code>.</p>
 <p>My goal is to create a backup once per day, so I also set up a systemd timer to run the backup script periodically. Steps:</p>
 <ol>
